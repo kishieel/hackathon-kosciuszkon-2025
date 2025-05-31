@@ -68,7 +68,7 @@ export default function JournalPage() {
         <Text style={styles.label}>Notes</Text>
         <TextInput
           style={styles.textInput}
-          placeholder="Placeholder"
+          placeholder="Write additional thought here"
           value={notes}
           onChangeText={setNotes}
           multiline
@@ -82,73 +82,87 @@ export default function JournalPage() {
 }
 
 const styles = StyleSheet.create({
+  // Layout
   container: {
     flex: 1,
     backgroundColor: '#4CAF50',
-    paddingHorizontal: 30,
-    paddingVertical: 0,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
     marginBottom: 30,
   },
   gradient: {
     flex: 1,
   },
   heading: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: '700',
     textAlign: 'center',
-    color: '#fff',
-    marginBottom: 16,
+    color: '#FFFFFF',
+    marginBottom: 20,
   },
   label: {
     fontSize: 16,
-    color: '#fff',
     fontWeight: '500',
+    textAlign: 'left',
+    color: '#E8F5E9',
+    marginBottom: 8,
+  },
+  checkboxLabel: {
+    fontSize: 16,
+    color: '#F1F8E9',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
     textAlign: 'center',
+    color: '#4CAF50',
+  },
+  textInput: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 14,
+    fontSize: 15,
+    textAlignVertical: 'top',
+    minHeight: 100,
+    borderWidth: 1,
+    borderColor: '#A5D6A7',
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
   },
   checkboxGroup: {
-    marginTop: 10,
+    marginTop: 12,
   },
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   checkbox: {
-    width: 20,
-    height: 20,
+    width: 22,
+    height: 22,
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: '#C8E6C9',
     marginRight: 10,
-    borderRadius: 4,
+    borderRadius: 6,
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   checkedCheckbox: {
-    backgroundColor: '#333',
-  },
-  checkboxLabel: {
-    fontSize: 16,
-    color: '#333',
-  },
-  textInput: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 12,
-    textAlignVertical: 'top',
-    minHeight: 80,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    marginBottom: 10,
+    backgroundColor: '#2E7D32',
   },
   button: {
-    backgroundColor: '#F1F8E9',
-    borderRadius: 15,
-    padding: 18,
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  buttonText: {
-    fontSize: 16,
-    color: '#2E7D32',
-    fontWeight: '500',
-    textAlign: 'center',
-  },
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  }
 });

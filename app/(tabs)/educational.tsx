@@ -21,24 +21,27 @@ export default function EducationalMaterialsSection() {
             else if (path == 5) {
                 router.navigate('/pages/educational/innovative-storage')
             }
+            else if (path == 6) {
+                router.navigate('/pages/educational/green-energy')
+            }
         }
     const materials = [
     {
       id: 1,
       title: 'Nuclear Energy',
-      icon: 'delete-outline',
+      icon: 'calendar-today',
       backgroundColor: '#fff',
     },
     {
       id: 2,
       title: 'Energy Dissipation',
-      icon: 'refresh',
+      icon: 'calendar-today',
       backgroundColor: '#fff',
     },
     {
       id: 3,
       title: 'Energy Transportation',
-      icon: 'star-outline',
+      icon: 'calendar-today',
       backgroundColor: '#fff',
     },
     {
@@ -49,7 +52,13 @@ export default function EducationalMaterialsSection() {
     },
     {
       id: 5,
-      title: 'Innovative Ideas for Storing Energy',
+      title: 'Innovative Energy Storage',
+      icon: 'calendar-today',
+      backgroundColor: '#fff',
+    },
+    {
+      id: 6,
+      title: 'Green Energy',
       icon: 'calendar-today',
       backgroundColor: '#fff',
     }
@@ -62,14 +71,16 @@ export default function EducationalMaterialsSection() {
         colors={['#81C784', '#4CAF50', '#2E7D32']}
         style={styles.gradient}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Materials Grid */}
-          <View style={styles.servicesContainer}>
-            <View style={styles.servicesGrid}>
+          <View style={styles.welcomeSection}>
+            <Text style={styles.welcomeText}>Welcome to the Educational Section. Here you can learn about different aspects of Energy.</Text>
+          </View>
+          <View style={styles.materialsContainer}>
+            <View style={styles.materialsGrid}>
               {materials.map((materials) => (
-                <TouchableOpacity key={materials.id} style={styles.serviceCard} onPress={() => redirect(materials.id)}>
-                  <View style={styles.serviceIconContainer}>
+                <TouchableOpacity key={materials.id} style={styles.materialCard} onPress={() => redirect(materials.id)}>
+                  <View style={styles.materialIconContainer}>
                   </View>
-                  <Text style={styles.serviceTitle}>{materials.title}</Text>
+                  <Text style={styles.materialTitle}>{materials.title}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -88,16 +99,28 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
   },
-  servicesContainer: {
+  welcomeSection: {
+    paddingHorizontal: 20,
+    paddingVertical: 80,
+    alignItems: 'center',
+  },
+  welcomeText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  materialsContainer: {
     paddingHorizontal: 30,
+    paddingVertical: 0,
     marginBottom: 30,
   },
-  servicesGrid: {
+  materialsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  serviceCard: {
+  materialCard: {
     width: '48%',
     backgroundColor: '#fff',
     borderRadius: 20,
@@ -113,10 +136,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  serviceIconContainer: {
+  materialIconContainer: {
     marginBottom: 0,
   },
-  serviceTitle: {
+  materialTitle: {
     fontSize: 14,
     fontWeight: '600',
     color: '#333',

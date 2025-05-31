@@ -1,9 +1,13 @@
 import { Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
+import { news } from '../../data/news.ts';
 
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
+import React from 'react';
 
 export default function EcoServicesApp() { 
+  const router = useRouter()
+
   const services = [
     {
       id: 1,
@@ -43,19 +47,6 @@ export default function EcoServicesApp() {
     },
   ];
 
-  var news = [
-    {
-      id: 1,
-      title: 'Please buy our corporate greenwashed food',
-      thumbtext: 'please please please pleas'
-    },
-    {
-      id: 2,
-      title: 'Celebrate Sigma Skibidi day with double points',
-      thumbtext: 'Event lasts until the imminent collapse of human society'
-    }
-  ]
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#4CAF50" />
@@ -88,7 +79,10 @@ export default function EcoServicesApp() {
             <Text style={styles.serviceTitle}> Latest News </Text>
             <View style={styles.newsGrid}>
               {news.map((n) => (
-                <TouchableOpacity key={n.id} style={styles.newsCard}>
+                <TouchableOpacity key={n.id} style={styles.newsCard} onPress={() => {
+                    router.push(`/pages/news/${n.id}`)
+                    console.log(`/pages/news/${n.id}`)
+                  } }>
                   <Text style={styles.newsTitle}>{n.title}</Text>
                   <Text style={styles.newsThumbtext}>{n.thumbtext}</Text>
                 </TouchableOpacity>

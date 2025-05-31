@@ -1,14 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  Animated,
   Modal,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -16,9 +17,42 @@ export default function EcoEventsScreen() {
   const [selectedView, setSelectedView] = useState('map');
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [reward, setReward] = useState(false);
+
   const insets = useSafeAreaInsets();
 
-  console.log('Safe Area Insets:', insets);
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const scaleAnim = React.useRef(new Animated.Value(0.8)).current;
+
+  const eventTitle = "Beach Cleanup Drive";
+  const eventPoints = 50;
+  const eventDate = "Tomorrow";
+  const eventTime = "9:00 AM";
+  const eventLocation = "Seaside Park";
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 8,
+        tension: 40,
+        useNativeDriver: true,
+      })
+    ]).start();
+  }, []);
+
+  const handleViewDetails = () => {
+    setReward(false);
+  };
+
+  const handleReturnHome = () => {
+    setReward(false);
+  };
 
   const events = [
     {
@@ -218,11 +252,91 @@ export default function EcoEventsScreen() {
           </View>
         </ScrollView>
 
-        <TouchableOpacity style={styles.joinButton}>
+        <TouchableOpacity style={styles.joinButton} onPress={() => goToReward()}>
           <Text style={styles.joinButtonText}>Join Event</Text>
         </TouchableOpacity>
       </SafeAreaView>
     </Modal>
+  );
+
+  const EventsReward = () => (
+    <LinearGradient colors={['#66BB6A', '#4CAF50']} style={styles2.container}>
+      <SafeAreaView style={styles2.safeArea}>
+        <View style={styles2.header}>
+          <Text style={styles2.headerTitle}>Event Joined!</Text>
+          <TouchableOpacity style={styles2.closeButton} onPress={handleReturnHome}>
+            <Ionicons name="close" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles2.content}>
+          <Animated.View
+            style={[
+              styles2.rewardCard,
+              { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }
+            ]}
+          >
+            <View style={styles2.iconContainer}>
+              <View style={styles2.coinCircle}>
+                <Ionicons name="leaf" size={40} color="#4CAF50" />
+              </View>
+            </View>
+
+            <Text style={styles2.congratsText}>Thank you for joining!</Text>
+            <Text style={styles2.eventTitle}>{eventTitle}</Text>
+
+            <View style={styles2.rewardSection}>
+              <View style={styles2.coinContainer}>
+                <Text style={styles2.coinAmount}>+{eventPoints}</Text>
+                <Text style={styles2.coinLabel}>Green Coins</Text>
+              </View>
+            </View>
+
+            <View style={styles2.separator} />
+
+            <View style={styles2.eventDetailsSection}>
+              <Text style={styles2.detailsHeading}>Event Details:</Text>
+
+              <View style={styles2.detailRow}>
+                <Ionicons name="calendar" size={18} color="#22c55e" />
+                <Text style={styles2.detailText}>{eventDate} at {eventTime}</Text>
+              </View>
+
+              <View style={styles2.detailRow}>
+                <Ionicons name="location" size={18} color="#22c55e" />
+                <Text style={styles2.detailText}>{eventLocation}</Text>
+              </View>
+
+              <View style={styles2.detailRow}>
+                <Ionicons name="information-circle" size={18} color="#22c55e" />
+                <Text style={styles2.detailText}>We will send you a reminder before the event</Text>
+              </View>
+            </View>
+
+            <TouchableOpacity style={styles2.calendarButton}>
+              <Ionicons name="calendar" size={18} color="white" style={styles2.buttonIcon} />
+              <Text style={styles2.calendarButtonText}>Add to Calendar</Text>
+            </TouchableOpacity>
+          </Animated.View>
+
+          <View style={styles2.buttonsContainer}>
+            <TouchableOpacity
+              style={styles2.viewDetailsButton}
+              onPress={handleViewDetails}
+            >
+              <Text style={styles2.viewDetailsText}>View Event Details</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles2.homeButton}
+              onPress={handleReturnHome}
+            >
+              <Text style={styles2.homeButtonText}>Return to Events</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 
   const openEventDetail = (event: any) => {
@@ -234,6 +348,17 @@ export default function EcoEventsScreen() {
     setModalVisible(false);
     setSelectedEvent(null);
   };
+
+  const goToReward = () => {
+    setModalVisible(false);
+    setReward(true);
+  }
+
+  if (reward) {
+    return (
+      <EventsReward />
+    );
+  }
 
   return (
     <LinearGradient colors={['#66BB6A', '#4CAF50']} style={styles.container}>
@@ -585,5 +710,163 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+});
+
+const styles2 = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  headerTitle: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    padding: 8,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  rewardCard: {
+    backgroundColor: 'white',
+    borderRadius: 24,
+    width: '100%',
+    padding: 24,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  iconContainer: {
+    marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  animation: {
+    width: 200,
+    height: 200,
+    position: 'absolute',
+  },
+  coinCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#dcfce7',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  congratsText: {
+    fontSize: 18,
+    color: '#4b5563',
+    marginTop: 8,
+  },
+  eventTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#1f2937',
+    textAlign: 'center',
+    marginTop: 4,
+    marginBottom: 16,
+  },
+  rewardSection: {
+    marginVertical: 16,
+    alignItems: 'center',
+  },
+  coinContainer: {
+    alignItems: 'center',
+  },
+  coinAmount: {
+    fontSize: 42,
+    fontWeight: 'bold',
+    color: '#22c55e',
+  },
+  coinLabel: {
+    fontSize: 16,
+    color: '#4b5563',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#e5e7eb',
+    width: '100%',
+    marginVertical: 16,
+  },
+  eventDetailsSection: {
+    width: '100%',
+  },
+  detailsHeading: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1f2937',
+    marginBottom: 10,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  detailText: {
+    marginLeft: 10,
+    fontSize: 14,
+    color: '#4b5563',
+  },
+  calendarButton: {
+    flexDirection: 'row',
+    backgroundColor: '#22c55e',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+  },
+  buttonIcon: {
+    marginRight: 8,
+  },
+  calendarButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  buttonsContainer: {
+    width: '100%',
+    marginTop: 20,
+  },
+  viewDetailsButton: {
+    backgroundColor: 'transparent',
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  viewDetailsText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  homeButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingVertical: 12,
+    borderRadius: 16,
+    alignItems: 'center',
+  },
+  homeButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

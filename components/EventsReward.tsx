@@ -1,0 +1,10 @@
+
+export const EventsReward = () => {
+
+
+  return (
+    
+
+  );
+}
+

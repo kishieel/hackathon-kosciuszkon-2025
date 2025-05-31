@@ -1,5 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function EcoServicesApp() {
@@ -201,9 +202,17 @@ export default function EcoServicesApp() {
         },
     ];
 
-    const globux = 150;
+    var [globux, setGlobux] = useState(2000);
 
     const insets = useSafeAreaInsets();
+
+    function Transaction(x : number)
+    {
+        if(globux >= x)
+        setGlobux(globux - x);
+        else
+        Vibration.vibrate([0, 100]);
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -219,10 +228,10 @@ export default function EcoServicesApp() {
 
                 {/* Services Grid */}
                 <View style={styles.panel}>
-                    <ScrollView style={{marginBottom: insets.bottom + 48 }} showsVerticalScrollIndicator={false}>
+                    <ScrollView style={{marginBottom: insets.bottom + 54 }} showsVerticalScrollIndicator={false}>
                         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                             {productsBillboard.map((product) => (
-                                <TouchableOpacity key={product.id} style={styles.productTile}>
+                                <TouchableOpacity onPress={ () => Transaction(product.price) } key={product.id} style={styles.productTile}>
                                     <View style={styles.productTop}>{product.title}
                                         <Image source={product.icon} style={styles.productIcon} resizeMode='contain' />
                                     </View>
@@ -235,7 +244,7 @@ export default function EcoServicesApp() {
                         </ScrollView>
 
                         {productsList.map((product) => (
-                            <TouchableOpacity key={product.id} style={styles.productTileWide}>
+                            <TouchableOpacity onPress={ () => Transaction(product.price) } key={product.id} style={styles.productTileWide}>
                                 <Image source={product.icon} style={styles.productIconWide} resizeMode='cover' />
                                 <View style={styles.productBarWide}>
                                     <Text numberOfLines={1} style={styles.productNameWide}>{product.title}</Text>
@@ -413,6 +422,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
     },
     bottomNav: {
+        position: 'absolute',
         bottom: -90,
         left: 0,
         right: 0,

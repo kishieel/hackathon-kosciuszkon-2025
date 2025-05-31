@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, View } from "react-native";
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
 
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -12,6 +12,9 @@ export default function NuclearEnergySection() {
                 style={styles.gradient}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                   <View style={styles.textContainer}>
+                    <Text style={styles.textContent}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </Text>
                   </View>
                 </ScrollView>
               </LinearGradient>
@@ -31,4 +34,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         marginBottom: 30,
     },
+    textContent: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#fff',
+        textAlign: 'center',
+    }
 })

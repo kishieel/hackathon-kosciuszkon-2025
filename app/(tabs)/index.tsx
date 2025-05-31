@@ -7,42 +7,39 @@ export default function EcoServicesApp() {
   const services = [
     {
       id: 1,
-      title: 'Plastic points',
+      title: 'Educational',
       icon: 'delete-outline',
       backgroundColor: '#fff',
     },
     {
       id: 2,
-      title: 'Recycling',
+      title: 'Quiz',
       icon: 'refresh',
       backgroundColor: '#fff',
     },
     {
       id: 3,
-      title: 'My Level',
+      title: 'Journal',
       icon: 'star-outline',
       backgroundColor: '#fff',
     },
     {
       id: 4,
-      title: 'Calendar',
+      title: 'Statistics',
       icon: 'calendar-today',
       backgroundColor: '#fff',
     },
-  ];
-
-  const newsItems = [
     {
-      id: 1,
-      title: 'How important are recycling and collection',
-      category: 'Environment',
-      image: '🌱',
+      id: 5,
+      title: 'Events',
+      icon: 'calendar-today',
+      backgroundColor: '#fff',
     },
     {
-      id: 2,
-      title: 'How important are recycling and collection',
-      category: 'Environment',
-      image: '🌱',
+      id: 6,
+      title: 'Cooperation',
+      icon: 'calendar-today',
+      backgroundColor: '#fff',
     },
   ];
 
@@ -72,31 +69,8 @@ export default function EcoServicesApp() {
               ))}
             </View>
           </View>
-
-          {/* News Section */}
-          <View style={styles.newsSection}>
-            <Text style={styles.sectionTitle}>News</Text>
-            <View style={styles.newsContainer}>
-              {newsItems.map((item) => (
-                <TouchableOpacity key={item.id} style={styles.newsCard}>
-                  <LinearGradient
-                    colors={['#CDDC39', '#8BC34A']}
-                    style={styles.newsGradient}
-                  >
-                    <View style={styles.newsImageContainer}>
-                      <Text style={styles.newsEmoji}>{item.image}</Text>
-                    </View>
-                    <View style={styles.newsContent}>
-                      <Text style={styles.newsTitle}>{item.title}</Text>
-                      <Text style={styles.newsCategory}>{item.category}</Text>
-                    </View>
-                  </LinearGradient>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
         </ScrollView>
-
+ 
         {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
           <TouchableOpacity style={styles.navItem}>
@@ -152,7 +126,7 @@ const styles = StyleSheet.create({
   },
   welcomeSection: {
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: 120,
     alignItems: 'center',
   },
   welcomeText: {
@@ -162,7 +136,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   servicesContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
     marginBottom: 30,
   },
   servicesGrid: {
@@ -173,7 +147,7 @@ const styles = StyleSheet.create({
   serviceCard: {
     width: '48%',
     backgroundColor: '#fff',
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 20,
     alignItems: 'center',
     marginBottom: 12,
@@ -187,17 +161,13 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   serviceIconContainer: {
-    marginBottom: 12,
+    marginBottom: 0,
   },
   serviceTitle: {
     fontSize: 14,
     fontWeight: '600',
     color: '#333',
     textAlign: 'center',
-  },
-  newsSection: {
-    paddingHorizontal: 20,
-    marginBottom: 100,
   },
   sectionTitle: {
     fontSize: 22,
@@ -207,50 +177,6 @@ const styles = StyleSheet.create({
   },
   newsContainer: {
     gap: 12,
-  },
-  newsCard: {
-    borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  newsGradient: {
-    flexDirection: 'row',
-    padding: 16,
-    alignItems: 'center',
-  },
-  newsImageContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  newsEmoji: {
-    fontSize: 24,
-  },
-  newsContent: {
-    flex: 1,
-  },
-  newsTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
-    lineHeight: 20,
-  },
-  newsCategory: {
-    fontSize: 12,
-    color: '#666',
-    fontWeight: '500',
   },
   bottomNav: {
     position: 'absolute',

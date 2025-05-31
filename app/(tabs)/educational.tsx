@@ -6,24 +6,20 @@ import { useRouter } from 'expo-router';
 export default function EducationalMaterialsSection() { 
     const router = useRouter()
         const redirect = (path:number) => {
-            if (path == 1) {
-                router.navigate('/pages/educational/nuclear')
-            }
-            else if (path == 2) {
-                router.navigate('/pages/educational/dissipation')
-            }
-            else if (path == 3) {
-                router.navigate('/pages/educational/transportation')
-            }
-            else if (path == 4) {
-                router.navigate('/pages/educational/longterm-storage')
-            }
-            else if (path == 5) {
-                router.navigate('/pages/educational/innovative-storage')
-            }
-            else if (path == 6) {
-                router.navigate('/pages/educational/green-energy')
-            }
+          switch (path) {
+            case 1:
+              router.navigate('/pages/educational/nuclear')
+            case 2:
+              router.navigate('/pages/educational/dissipation')
+            case 3:
+              router.navigate('/pages/educational/transportation')
+            case 4:
+              router.navigate('/pages/educational/longterm-storage')
+            case 5:
+              router.navigate('/pages/educational/innovative-storage')
+            case 6:
+              router.navigate('/pages/educational/green-energy')
+          }
         }
     const materials = [
     {

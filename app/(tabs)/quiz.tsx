@@ -1,6 +1,7 @@
 import Slider from '@react-native-community/slider';
+import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -159,6 +160,38 @@ const QuizScreen = () => {
   const [showResult, setShowResult] = useState<boolean>(false);
 
   const progressPercentage = ((currentQuestionIndex + 1) / quizData.length) * 100;
+
+  const fileUri = FileSystem.documentDirectory + 'globux.json'
+  var [globux, setGlobux] = useState(0);
+
+  const gainGlobux = async () => {
+    try {
+      const fileInfo = await FileSystem.getInfoAsync(fileUri);
+      if (fileInfo.exists) {
+        const content = await FileSystem.readAsStringAsync(fileUri);
+        const parsed = JSON.parse(content);
+        if (typeof parsed.globux === 'number') {
+          setGlobux(parsed.globux + score);
+        }
+      }
+    } catch (error) {
+      return;
+    } finally {
+    }
+  };
+
+    useEffect(() => {
+        const save = async () => {
+            try {
+                const content = JSON.stringify({ globux });
+                await FileSystem.writeAsStringAsync(fileUri, content);
+            } catch (error) {
+                console.error('Error saving value to file:', error);
+            }
+        };
+
+        save();
+    }, [globux]);
 
   const handleAnswer = (answer: MultipleChoiceAnswer | MultipleSelectAnswer | TrueFalseAnswer | FillInBlankAnswer | SliderAnswer | CategorizeAnswer | LikertScaleAnswer) => {
     setAnswers({
@@ -485,6 +518,7 @@ const QuizScreen = () => {
         onPress={() => {
           setCurrentQuestionIndex(0);
           setAnswers({});
+          gainGlobux();
           setScore(0);
           setQuizCompleted(false);
           setShowResult(false);

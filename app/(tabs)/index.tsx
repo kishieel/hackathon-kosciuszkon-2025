@@ -1,12 +1,35 @@
+import { useFocusEffect } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { news } from '../../data/news.ts';
 
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import React from 'react';
-
 export default function EcoServicesApp() { 
   const router = useRouter()
+
+  const fileUri = FileSystem.documentDirectory + 'globux.json'
+  var [globux, setGlobux] = useState(0);
+
+  useFocusEffect(() => {
+  const loadValue = async () => {
+    try {
+      const fileInfo = await FileSystem.getInfoAsync(fileUri);
+      if (fileInfo.exists) {
+        const content = await FileSystem.readAsStringAsync(fileUri);
+        const parsed = JSON.parse(content);
+        if (typeof parsed.globux === 'number') {
+            setGlobux(parsed.globux);
+        }
+      } 
+    } catch (error) {
+      
+    }
+  };
+
+  loadValue();
+});
 
   const services = [
     {
@@ -59,7 +82,7 @@ export default function EcoServicesApp() {
           {/* Welcome Section */}
           <View style={styles.welcomeSection}>
             <Text style={styles.welcomeText}>Welcome</Text>
-            <Text style={styles.mainMenuCoinCounter}>You have: 420 GreenCoins</Text>
+            <Text style={styles.mainMenuCoinCounter}>You have: {globux} GreenCoins</Text>
           </View>
 
           <View style={styles.menuFocusButtonsContainer}>
@@ -274,7 +297,7 @@ const styles = StyleSheet.create({
   },
   bottomNav: {
     position: 'absolute',
-    bottom: 0,
+    bottom: -90,
     left: 0,
     right: 0,
     flexDirection: 'row',

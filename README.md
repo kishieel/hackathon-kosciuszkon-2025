@@ -1,33 +1,29 @@
-# 🌿 Leaflit – Environmental Awareness & Action App
+# 🌿 LeafLit – Environmental Awareness & Action App
 
-**Leaflit** is a mobile app built with React Native + Expo to promote environmental awareness and encourage sustainable habits through learning, journaling, and real-world engagement. Designed for students and eco-conscious users, the app gamifies good behavior with points and rewards.
+**LeafLit** is a mobile app built with React Native + Expo to promote environmental awareness and encourage sustainable habits through learning, journaling, and real-world engagement. Designed for students and eco-conscious users, the app gamifies good behavior with points and rewards.
 
 ---
 
 ## 🌱 Core Features
 
 ### 📖 Educational Section
-- Browse short lessons on sustainability, climate change, recycling, and more
-- Interactive content with quizzes to reinforce learning
-- Earn eco-points for completing lessons
+- Browse short lessons on nuclear energy, long-term energy storage, and more
+- Interactive content with quizzes to reinforce learning and educate
+- Earn GreenPoints for completing lessons and participating in events
 
-### 📝 Journal & Habit Tracker
+### 📝 Journal
 - Log daily transportation choices (car, bike, walk, public)
 - Record diet and personal eco-reflections
-- Track eco-points earned through habits
 
-### 🛍️ Eco-Points Shop
+### 🛍️ GreenPoint Shop
 - Spend earned points in a virtual store
 - Redeem rewards like digital badges, tips, or partner discounts
-- Simulates eco-economy to reinforce sustainable behavior
 
 ### 📊 Stats & Insights
-- View progress with weekly and monthly statistics
-- Visual breakdown of transportation impact, diet changes, and journal activity
-- See how your habits evolve over time
+- View overall statistics based on you choices
 
 ### 📆 External Events Feed
-- Discover local or global eco-events, challenges, and volunteering opportunities
+- Discover local or global eco-events, challenges
 - Events can be linked to extra point bonuses
 - Curated list from internal or external sources (manual or via future API integration)
 

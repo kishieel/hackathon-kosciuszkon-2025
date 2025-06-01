@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -10,43 +10,44 @@ export default function EcoServicesApp() {
     var [globux, setGlobux] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    useFocusEffect(() => {
-    const loadValue = async () => {
-      try {
-        setIsLoaded(false)
-        const fileInfo = await FileSystem.getInfoAsync(fileUri);
-        if (fileInfo.exists) {
-          const content = await FileSystem.readAsStringAsync(fileUri);
-          const parsed = JSON.parse(content);
-          if (typeof parsed.globux === 'number') {
-              setGlobux(parsed.globux);
-          }
-        } 
-      } catch (error) {
-        
-      } finally {
-        setIsLoaded(true)
-      }
-    };
+    useFocusEffect(
+        useCallback(() => {
+            const loadValue = async () => {
+                try {
+                    setIsLoaded(false)
+                    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+                    if (fileInfo.exists) {
+                        const content = await FileSystem.readAsStringAsync(fileUri);
+                        const parsed = JSON.parse(content);
+                        if (typeof parsed.globux === 'number') {
+                            setGlobux(parsed.globux);
+                        }
+                    }
+                } catch (error) {
 
-    loadValue();
-  });
+                } finally {
+                    setIsLoaded(true)
+                }
+            };
 
-useEffect(() => {
-    if(!isLoaded) return;
+            loadValue();
+        }, [])
+    );
 
-  const save = async () => {
-    try {
-      const content = JSON.stringify({ globux });
-      await FileSystem.writeAsStringAsync(fileUri, content);
-      console.log('Saved globux:', globux);
-    } catch (error) {
-      console.error('Error saving value to file:', error);
-    }
-  };
+    useEffect(() => {
+        if (!isLoaded) return;
 
-  save();
-}, [globux, isLoaded]);
+        const save = async () => {
+            try {
+                const content = JSON.stringify({ globux });
+                await FileSystem.writeAsStringAsync(fileUri, content);
+            } catch (error) {
+                console.error('Error saving value to file:', error);
+            }
+        };
+
+        save();
+    }, [globux, isLoaded]);
 
     const productsBillboard = [
         {
@@ -141,14 +142,11 @@ useEffect(() => {
 
     const insets = useSafeAreaInsets();
 
-    function Transaction(x : number)
-    {
-        if(globux >= x)
-        {
+    function Transaction(x: number) {
+        if (globux >= x) {
             setGlobux(globux - x);
         }
-        else
-        {
+        else {
             Shake()
             Vibration.vibrate([0, 100]);
         }
@@ -158,11 +156,11 @@ useEffect(() => {
 
     const Shake = () => {
         Animated.sequence([
-        Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true }),
         ]).start();
     };
 
@@ -181,10 +179,10 @@ useEffect(() => {
                 {/* Services Grid */}
                 <View style={styles.panel}>
                     <Animated.View style={{ transform: [{ translateX: shakeAnim }] }}>
-                        <ScrollView style={{marginBottom: insets.bottom + 54 }} showsVerticalScrollIndicator={false}>
+                        <ScrollView style={{ marginBottom: insets.bottom + 54 }} showsVerticalScrollIndicator={false}>
                             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                                 {productsBillboard.map((product) => (
-                                    <TouchableOpacity onPress={ () => Transaction(product.price) } key={product.id} style={styles.productTile}>
+                                    <TouchableOpacity onPress={() => Transaction(product.price)} key={product.id} style={styles.productTile}>
                                         <View style={styles.productTop}>
                                             <Image source={product.icon} style={styles.productIcon} resizeMode='contain' />
                                         </View>
@@ -197,7 +195,7 @@ useEffect(() => {
                             </ScrollView>
 
                             {productsList.map((product) => (
-                                <TouchableOpacity onPress={ () => Transaction(product.price) } key={product.id} style={styles.productTileWide}>
+                                <TouchableOpacity onPress={() => Transaction(product.price)} key={product.id} style={styles.productTileWide}>
                                     <Image source={product.icon} style={styles.productIconWide} resizeMode='cover' />
                                     <View style={styles.productBarWide}>
                                         <Text numberOfLines={1} style={styles.productNameWide}>{product.title}</Text>

@@ -1,8 +1,8 @@
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
-
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import React from 'react';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
 export default function EducationalMaterialsSection() { 
     const router = useRouter()
         const redirect = (path:number) => {
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   welcomeSection: {
     paddingHorizontal: 20,
-    paddingVertical: 80,
+    paddingVertical: 20,
     alignItems: 'center',
   },
   welcomeText: {

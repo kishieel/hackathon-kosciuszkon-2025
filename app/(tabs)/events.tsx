@@ -1,5 +1,5 @@
+import { useCoins } from '@/app/contexts/useCoins';
 import { Ionicons } from '@expo/vector-icons';
-import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
 import {
@@ -25,49 +25,7 @@ export default function EcoEventsScreen() {
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const scaleAnim = React.useRef(new Animated.Value(0.8)).current;
 
-  const fileUri = FileSystem.documentDirectory + 'globux.json'
-  const [globux, setGlobux] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const fileInfo = await FileSystem.getInfoAsync(fileUri);
-        if (fileInfo.exists) {
-          const content = await FileSystem.readAsStringAsync(fileUri);
-          const parsed = JSON.parse(content);
-          if (typeof parsed.globux === 'number') {
-            setGlobux(parsed.globux);
-          }
-        }
-      } catch (error) {
-        console.error('Error loading currency:', error);
-      } finally {
-        setIsLoaded(true);
-      }
-    };
-    load();
-  }, []);
-
-  const gainGlobux = (value: number) => {
-    setGlobux(prev => prev + value);
-  };
-
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    const save = async () => {
-      try {
-        await FileSystem.writeAsStringAsync(fileUri, JSON.stringify({ globux }));
-      } catch (error) {
-        console.error('Error saving currency:', error);
-      }
-    };
-
-    save();
-  }, [globux, isLoaded]);
-
-
+  const { addCoins } = useCoins();
 
   useEffect(() => {
     Animated.parallel([
@@ -387,7 +345,7 @@ export default function EcoEventsScreen() {
                 </View>
               </View>
 
-              <TouchableOpacity onPress={() => { gainGlobux(event.points); deleteEvent(event.id); handleReturnHome() }} style={styles2.calendarButton}>
+              <TouchableOpacity onPress={() => { deleteEvent(event.id); handleReturnHome() }} style={styles2.calendarButton}>
                 <Ionicons
                   name="calendar"
                   size={18}
@@ -420,6 +378,7 @@ export default function EcoEventsScreen() {
     setSelectedEvent(event);
     setModalVisible(false);
     setRewardVisible(true);
+    addCoins({ name: 'Eco-event participation', value: event.points });
   };
 
   if (rewardVisible && selectedEvent) {

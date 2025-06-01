@@ -1,16 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
-import {
-  Animated,
-  Modal,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Animated, Modal, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function EcoEventsScreen() {
@@ -125,8 +116,7 @@ export default function EcoEventsScreen() {
     <TouchableOpacity
       style={styles.eventCard}
       onPress={() => onPress(event)}
-      activeOpacity={0.8}
-    >
+      activeOpacity={0.8}>
       <View style={styles.eventCardHeader}>
         <View style={styles.eventInfo}>
           <Text style={styles.eventTitle}>{event.title}</Text>

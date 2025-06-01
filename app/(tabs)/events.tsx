@@ -49,7 +49,7 @@ export default function EcoEventsScreen() {
     load();
   }, []);
 
-  const gainGlobux = (value : number) => {
+  const gainGlobux = (value: number) => {
     setGlobux(prev => prev + value);
   };
 
@@ -427,7 +427,7 @@ export default function EcoEventsScreen() {
   }
 
   return (
-    <>
+    <LinearGradient colors={['#66BB6A', '#4CAF50']} style={{ flex: 1 }}>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={[styles.safeArea, { paddingTop: insets.top }]}>
         <View style={styles.header}>
@@ -482,7 +482,7 @@ export default function EcoEventsScreen() {
           <ScrollView
             style={{ flex: 1 }}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 24 }}
+            contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
           >
             <MapView />
 
@@ -503,7 +503,7 @@ export default function EcoEventsScreen() {
           <ScrollView
             style={styles.listContainer}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 24 }}
+            contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
           >
             {events.map(event => (
               <EventCard
@@ -527,14 +527,14 @@ export default function EcoEventsScreen() {
           />
         )}
       </SafeAreaView>
-    </>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f9fafb',
+    padding: 16,
   },
   upcomingEventsLabel: {
     fontSize: 22,

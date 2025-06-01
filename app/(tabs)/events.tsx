@@ -41,7 +41,7 @@ export default function EcoEventsScreen() {
           }
         }
       } catch (error) {
-        console.error('Error loading globux:', error);
+        console.error('Error loading currency:', error);
       } finally {
         setIsLoaded(true);
       }
@@ -62,7 +62,7 @@ export default function EcoEventsScreen() {
       try {
         await FileSystem.writeAsStringAsync(fileUri, JSON.stringify({ globux }));
       } catch (error) {
-        console.error('Error saving globux:', error);
+        console.error('Error saving currency:', error);
       }
     };
 

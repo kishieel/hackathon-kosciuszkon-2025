@@ -43,8 +43,8 @@
 ### Setup Instructions
 
 ```bash
-git clone https://github.com/your-username/ecolog-app.git
-cd ecolog-app
+git clone https://github.com/kishieel/hackathon-kosciuszkon-2025
+cd hackathon-kosciuszkon-2025
 npm install
 npx expo start
 ```
@@ -52,7 +52,7 @@ npx expo start
 ### App Structure
 
 ```
-/ecolog-app
+/hackathon-kosciuszkon-2025
 ├── /app
 │   ├── (tabs)
 │       ├── _layout.tsx                 # navigation bar layout

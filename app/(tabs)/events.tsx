@@ -1,25 +1,73 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
-import { Animated, Modal, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Animated,
+  Modal,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function EcoEventsScreen() {
-  const [selectedView, setSelectedView] = useState('map');
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedView, setSelectedView] = useState<'map' | 'list'>('map');
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [reward, setReward] = useState(false);
+  const [rewardVisible, setRewardVisible] = useState(false);
 
   const insets = useSafeAreaInsets();
 
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const scaleAnim = React.useRef(new Animated.Value(0.8)).current;
 
-  const eventTitle = "Beach Cleanup Drive";
-  const eventPoints = 50;
-  const eventDate = "Tomorrow";
-  const eventTime = "9:00 AM";
-  const eventLocation = "Seaside Park";
+  const fileUri = FileSystem.documentDirectory + 'globux.json'
+  const [globux, setGlobux] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const fileInfo = await FileSystem.getInfoAsync(fileUri);
+        if (fileInfo.exists) {
+          const content = await FileSystem.readAsStringAsync(fileUri);
+          const parsed = JSON.parse(content);
+          if (typeof parsed.globux === 'number') {
+            setGlobux(parsed.globux);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading currency:', error);
+      } finally {
+        setIsLoaded(true);
+      }
+    };
+    load();
+  }, []);
+
+  const gainGlobux = (value: number) => {
+    setGlobux(prev => prev + value);
+  };
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    const save = async () => {
+      try {
+        await FileSystem.writeAsStringAsync(fileUri, JSON.stringify({ globux }));
+      } catch (error) {
+        console.error('Error saving currency:', error);
+      }
+    };
+
+    save();
+  }, [globux, isLoaded]);
+
+
 
   useEffect(() => {
     Animated.parallel([
@@ -33,90 +81,90 @@ export default function EcoEventsScreen() {
         friction: 8,
         tension: 40,
         useNativeDriver: true,
-      })
+      }),
     ]).start();
   }, []);
 
-  const handleViewDetails = () => {
-    setReward(false);
-  };
-
-  const handleReturnHome = () => {
-    setReward(false);
-  };
-
-  const events = [
+  const [events, setEvents] = useState([
     {
       id: 1,
-      title: "Beach Cleanup Drive",
-      location: "Seaside Park",
-      date: "Tomorrow",
-      time: "9:00 AM",
+      title: 'Beach Cleanup Drive',
+      location: 'Seaside Park',
+      date: 'Tomorrow',
+      time: '9:00 AM',
       participants: 24,
       maxParticipants: 30,
       points: 50,
-      difficulty: "Easy",
-      category: "cleanup",
-      description: "Join us for a morning beach cleanup to protect marine life and keep our shores beautiful.",
-      requirements: ["Bring gloves", "Water bottle", "Sun protection"],
+      difficulty: 'Easy',
+      category: 'cleanup',
+      description:
+        'Join us for a morning beach cleanup to protect marine life and keep our shores beautiful.',
+      requirements: ['Bring gloves', 'Water bottle', 'Sun protection'],
       latitude: 50.0614,
-      longitude: 19.9380
+      longitude: 19.938,
     },
     {
       id: 2,
-      title: "Community Tree Planting",
-      location: "Central Park",
-      date: "This Weekend",
-      time: "8:00 AM",
+      title: 'Community Tree Planting',
+      location: 'Central Park',
+      date: 'This Weekend',
+      time: '8:00 AM',
       participants: 15,
       maxParticipants: 20,
       points: 75,
-      difficulty: "Medium",
-      category: "planting",
-      description: "Help us plant native trees to improve air quality and create green spaces for wildlife.",
-      requirements: ["Comfortable clothes", "Work gloves provided", "Breakfast included"],
+      difficulty: 'Medium',
+      category: 'planting',
+      description:
+        'Help us plant native trees to improve air quality and create green spaces for wildlife.',
+      requirements: ['Comfortable clothes', 'Work gloves provided', 'Breakfast included'],
       latitude: 50.0647,
-      longitude: 19.9450
+      longitude: 19.945,
     },
     {
       id: 3,
-      title: "Recycling Workshop",
-      location: "Community Center",
-      date: "Next Week",
-      time: "2:00 PM",
+      title: 'Recycling Workshop',
+      location: 'Community Center',
+      date: 'Next Week',
+      time: '2:00 PM',
       participants: 8,
       maxParticipants: 15,
       points: 30,
-      difficulty: "Easy",
-      category: "education",
-      description: "Learn creative ways to upcycle everyday items and reduce household waste.",
-      requirements: ["Bring old items to upcycle", "Notebook"],
-      latitude: 50.0580,
-      longitude: 19.9320
+      difficulty: 'Easy',
+      category: 'education',
+      description: 'Learn creative ways to upcycle everyday items and reduce household waste.',
+      requirements: ['Bring old items to upcycle', 'Notebook'],
+      latitude: 50.058,
+      longitude: 19.932,
     },
     {
       id: 4,
-      title: "Urban Gardening Meetup",
-      location: "City Rooftop",
-      date: "Next Month",
-      time: "10:00 AM",
+      title: 'Urban Gardening Meetup',
+      location: 'City Rooftop',
+      date: 'Next Month',
+      time: '10:00 AM',
       participants: 12,
       maxParticipants: 20,
       points: 40,
-      difficulty: "Medium",
-      category: "gardening",
-      description: "Connect with fellow urban gardeners and share tips on growing food in small spaces.",
-      requirements: ["Notebook", "Gardening gloves"],
+      difficulty: 'Medium',
+      category: 'gardening',
+      description:
+        'Connect with fellow urban gardeners and share tips on growing food in small spaces.',
+      requirements: ['Notebook', 'Gardening gloves'],
       latitude: 50.0611,
-      longitude: 19.9375
-    }
-  ];
+      longitude: 19.9375,
+    },
+  ]);
 
-  const EventCard = ({ event, onPress }: any) => (
+  function deleteEvent(eventId: number) {
+    setEvents(prevEvents => prevEvents.filter(e => e.id !== eventId));
+  }
+
+  const EventCard = ({ event, onPress }: { event: any; onPress: (event: any) => void }) => (
     <TouchableOpacity
       style={styles.eventCard}
       onPress={() => onPress(event)}
-      activeOpacity={0.8}>
+      activeOpacity={0.8}
+    >
       <View style={styles.eventCardHeader}>
         <View style={styles.eventInfo}>
           <Text style={styles.eventTitle}>{event.title}</Text>
@@ -126,25 +174,37 @@ export default function EcoEventsScreen() {
           </View>
           <View style={styles.eventDate}>
             <Ionicons name="calendar-outline" size={14} color="#666" />
-            <Text style={styles.eventDateText}>{event.date} • {event.time}</Text>
+            <Text style={styles.eventDateText}>
+              {event.date} • {event.time}
+            </Text>
           </View>
         </View>
         <View style={styles.eventMeta}>
           <View style={styles.pointsBadge}>
             <Text style={styles.pointsText}>+{event.points} pts</Text>
           </View>
-          <View style={[
-            styles.difficultyBadge,
-            event.difficulty === 'Easy' ? styles.difficultyEasy :
-              event.difficulty === 'Medium' ? styles.difficultyMedium :
-                styles.difficultyHard
-          ]}>
-            <Text style={[
-              styles.difficultyText,
-              event.difficulty === 'Easy' ? styles.difficultyEasyText :
-                event.difficulty === 'Medium' ? styles.difficultyMediumText :
-                  styles.difficultyHardText
-            ]}>{event.difficulty}</Text>
+          <View
+            style={[
+              styles.difficultyBadge,
+              event.difficulty === 'Easy'
+                ? styles.difficultyEasy
+                : event.difficulty === 'Medium'
+                  ? styles.difficultyMedium
+                  : styles.difficultyHard,
+            ]}
+          >
+            <Text
+              style={[
+                styles.difficultyText,
+                event.difficulty === 'Easy'
+                  ? styles.difficultyEasyText
+                  : event.difficulty === 'Medium'
+                    ? styles.difficultyMediumText
+                    : styles.difficultyHardText,
+              ]}
+            >
+              {event.difficulty}
+            </Text>
           </View>
         </View>
       </View>
@@ -163,7 +223,7 @@ export default function EcoEventsScreen() {
         <View
           style={[
             styles.progressBar,
-            { width: `${(event.participants / event.maxParticipants) * 100}%` }
+            { width: `${(event.participants / event.maxParticipants) * 100}%` },
           ]}
         />
       </View>
@@ -179,26 +239,23 @@ export default function EcoEventsScreen() {
           <Text style={styles.mapSubtitle}>Tap markers to view events</Text>
         </View>
 
-        <TouchableOpacity style={[styles.mapMarker, { top: 48, left: 64 }]}>
-          <View style={styles.markerInner} />
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.mapMarker, { top: 80, right: 80 }]}>
-          <View style={styles.markerInner} />
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.mapMarker, { bottom: 64, left: 48 }]}>
-          <View style={styles.markerInner} />
-        </TouchableOpacity>
+        <TouchableOpacity style={[styles.mapMarker, { top: 48, left: 64 }]} />
+        <TouchableOpacity style={[styles.mapMarker, { top: 80, right: 80 }]} />
+        <TouchableOpacity style={[styles.mapMarker, { bottom: 64, left: 48 }]} />
       </View>
     </View>
   );
 
-  const EventDetailModal = ({ event, visible, onClose }: any) => (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      presentationStyle="pageSheet"
-      onRequestClose={onClose}
-    >
+  const EventDetailModal = ({
+    event,
+    visible,
+    onClose,
+  }: {
+    event: any;
+    visible: boolean;
+    onClose: () => void;
+  }) => (
+    <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <SafeAreaView style={styles.modalContainer}>
         <View style={styles.modalHeader}>
           <Text style={styles.modalTitle}>{event?.title}</Text>
@@ -215,7 +272,9 @@ export default function EcoEventsScreen() {
             </View>
             <View style={styles.detailRow}>
               <Ionicons name="calendar" size={18} color="#22c55e" />
-              <Text style={styles.detailText}>{event?.date} at {event?.time}</Text>
+              <Text style={styles.detailText}>
+                {event?.date} at {event?.time}
+              </Text>
             </View>
             <View style={styles.detailRow}>
               <Ionicons name="people" size={18} color="#22c55e" />
@@ -236,574 +295,623 @@ export default function EcoEventsScreen() {
 
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>What to bring</Text>
-            {event?.requirements.map((req: any, index: any) => (
-              <Text key={index} style={styles.requirementText}>• {req}</Text>
+            {event?.requirements.map((req: any, index: number) => (
+              <Text key={index} style={styles.requirementText}>
+                • {req}
+              </Text>
             ))}
           </View>
-        </ScrollView>
 
-        <TouchableOpacity style={styles.joinButton} onPress={() => goToReward()}>
-          <Text style={styles.joinButtonText}>Join Event</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.joinButton}
+            onPress={() => {
+              onClose();
+              goToReward(event);
+            }}
+          >
+            <Ionicons name="leaf" size={20} color="white" style={{ marginRight: 8 }} />
+            <Text style={styles.joinButtonText}>Join Event</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </SafeAreaView>
     </Modal>
   );
 
-  const EventsReward = () => (
-    <LinearGradient colors={['#66BB6A', '#4CAF50']} style={styles2.container}>
-      <SafeAreaView style={styles2.safeArea}>
-        <View style={styles2.header}>
-          <Text style={styles2.headerTitle}>Event Joined!</Text>
-          <TouchableOpacity style={styles2.closeButton} onPress={handleReturnHome}>
-            <Ionicons name="close" size={24} color="#fff" />
-          </TouchableOpacity>
-        </View>
+  const EventsReward = ({ event }: { event: any }) => {
+    const handleReturnHome = () => {
+      setRewardVisible(false);
+      setSelectedEvent(null);
+    };
 
-        <View style={styles2.content}>
-          <Animated.View
-            style={[
-              styles2.rewardCard,
-              { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }
-            ]}
-          >
-            <View style={styles2.iconContainer}>
-              <View style={styles2.coinCircle}>
-                <Ionicons name="leaf" size={40} color="#4CAF50" />
-              </View>
-            </View>
+    const handleViewDetails = () => {
+      setRewardVisible(false);
+      setSelectedEvent(event);
+      setModalVisible(true);
+    };
 
-            <Text style={styles2.congratsText}>Thank you for joining!</Text>
-            <Text style={styles2.eventTitle}>{eventTitle}</Text>
-
-            <View style={styles2.rewardSection}>
-              <View style={styles2.coinContainer}>
-                <Text style={styles2.coinAmount}>+{eventPoints}</Text>
-                <Text style={styles2.coinLabel}>Green Coins</Text>
-              </View>
-            </View>
-
-            <View style={styles2.separator} />
-
-            <View style={styles2.eventDetailsSection}>
-              <Text style={styles2.detailsHeading}>Event Details:</Text>
-
-              <View style={styles2.detailRow}>
-                <Ionicons name="calendar" size={18} color="#22c55e" />
-                <Text style={styles2.detailText}>{eventDate} at {eventTime}</Text>
-              </View>
-
-              <View style={styles2.detailRow}>
-                <Ionicons name="location" size={18} color="#22c55e" />
-                <Text style={styles2.detailText}>{eventLocation}</Text>
-              </View>
-
-              <View style={styles2.detailRow}>
-                <Ionicons name="information-circle" size={18} color="#22c55e" />
-                <Text style={styles2.detailText}>We will send you a reminder before the event</Text>
-              </View>
-            </View>
-
-            <TouchableOpacity style={styles2.calendarButton}>
-              <Ionicons name="calendar" size={18} color="white" style={styles2.buttonIcon} />
-              <Text style={styles2.calendarButtonText}>Add to Calendar</Text>
-            </TouchableOpacity>
-          </Animated.View>
-
-          <View style={styles2.buttonsContainer}>
-            <TouchableOpacity
-              style={styles2.viewDetailsButton}
-              onPress={handleViewDetails}
-            >
-              <Text style={styles2.viewDetailsText}>View Event Details</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles2.homeButton}
-              onPress={handleReturnHome}
-            >
-              <Text style={styles2.homeButtonText}>Return to Events</Text>
+    return (
+      <LinearGradient colors={['#66BB6A', '#4CAF50']} style={styles2.container}>
+        <SafeAreaView style={styles2.safeArea}>
+          <View style={styles2.header}>
+            <Text style={styles2.headerTitle}>Event Joined!</Text>
+            <TouchableOpacity style={styles2.closeButton} onPress={handleReturnHome}>
+              <Ionicons name="close" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
-        </View>
-      </SafeAreaView>
-    </LinearGradient>
-  );
 
-  const openEventDetail = (event: any) => {
-    setSelectedEvent(event);
-    setModalVisible(true);
-  };
+          <View style={styles2.content}>
+            <Animated.View
+              style={[
+                styles2.rewardCard,
+                { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
+              ]}
+            >
+              <View style={styles2.iconContainer}>
+                <View style={styles2.coinCircle}>
+                  <Ionicons name="leaf" size={40} color="#4CAF50" />
+                </View>
+              </View>
 
-  const closeEventDetail = () => {
-    setModalVisible(false);
-    setSelectedEvent(null);
-  };
+              <Text style={styles2.congratsText}>Thank you for joining!</Text>
+              <Text style={styles2.eventTitle}>{event.title}</Text>
 
-  const goToReward = () => {
-    setModalVisible(false);
-    setReward(true);
-  }
+              <View style={styles2.rewardSection}>
+                <View style={styles2.coinContainer}>
+                  <Text style={styles2.coinAmount}>+{event.points}</Text>
+                  <Text style={styles2.coinLabel}>Green Coins</Text>
+                </View>
+              </View>
 
-  if (reward) {
-    return (
-      <EventsReward />
+              <View style={styles2.separator} />
+
+              <View style={styles2.eventDetailsSection}>
+                <Text style={styles2.detailsHeading}>Event Details:</Text>
+
+                <View style={styles2.detailRow}>
+                  <Ionicons name="calendar" size={18} color="#22c55e" />
+                  <Text style={styles2.detailText}>
+                    {event.date} at {event.time}
+                  </Text>
+                </View>
+
+                <View style={styles2.detailRow}>
+                  <Ionicons name="location" size={18} color="#22c55e" />
+                  <Text style={styles2.detailText}>{event.location}</Text>
+                </View>
+
+                <View style={styles2.detailRow}>
+                  <Ionicons name="information-circle" size={18} color="#22c55e" />
+                  <Text style={styles2.detailText}>
+                    We will send you a reminder before the event
+                  </Text>
+                </View>
+              </View>
+
+              <TouchableOpacity onPress={() => { gainGlobux(event.points); deleteEvent(event.id); handleReturnHome() }} style={styles2.calendarButton}>
+                <Ionicons
+                  name="calendar"
+                  size={18}
+                  color="white"
+                  style={styles2.buttonIcon}
+                />
+                <Text style={styles2.calendarButtonText}>Add to Calendar</Text>
+              </TouchableOpacity>
+            </Animated.View>
+
+            <View style={styles2.buttonsContainer}>
+              <TouchableOpacity
+                style={styles2.viewDetailsButton}
+                onPress={handleViewDetails}
+              >
+                <Text style={styles2.viewDetailsText}>View Event Details</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles2.homeButton} onPress={handleReturnHome}>
+                <Text style={styles2.homeButtonText}>Return to Events</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </SafeAreaView>
+      </LinearGradient>
     );
+  };
+
+  const goToReward = (event: any) => {
+    setSelectedEvent(event);
+    setModalVisible(false);
+    setRewardVisible(true);
+  };
+
+  if (rewardVisible && selectedEvent) {
+    return <EventsReward event={selectedEvent} />;
   }
 
   return (
-    <LinearGradient colors={['#66BB6A', '#4CAF50']} style={styles.container}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar barStyle="light-content" backgroundColor="#22c55e" />
-
+    <LinearGradient colors={['#66BB6A', '#4CAF50']} style={{ flex: 1 }}>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView style={[styles.safeArea, { paddingTop: insets.top }]}>
         <View style={styles.header}>
-          <View style={styles.headerTop}>
-            <Text style={styles.headerTitle}>Local Events</Text>
-            <View style={styles.headerActions}>
-              <TouchableOpacity style={styles.headerButton}>
-                <Ionicons name="search" size={20} color="white" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.headerButton}>
-                <Ionicons name="filter" size={20} color="white" />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.tabContainer}>
+          <Text style={styles.screenTitle}>EcoEvents</Text>
+          <View style={styles.viewToggle}>
             <TouchableOpacity
-              style={[styles.tab, selectedView === 'map' && styles.activeTab]}
+              style={[
+                styles.toggleButton,
+                selectedView === 'map' && styles.toggleButtonActive,
+              ]}
               onPress={() => setSelectedView('map')}
             >
-              <Text style={[styles.tabText, selectedView === 'map' && styles.activeTabText]}>
+              <Ionicons
+                name="map-outline"
+                size={20}
+                color={selectedView === 'map' ? 'white' : '#4CAF50'}
+              />
+              <Text
+                style={[
+                  styles.toggleText,
+                  selectedView === 'map' && styles.toggleTextActive,
+                ]}
+              >
                 Map View
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.tab, selectedView === 'list' && styles.activeTab]}
+              style={[
+                styles.toggleButton,
+                selectedView === 'list' && styles.toggleButtonActive,
+              ]}
               onPress={() => setSelectedView('list')}
             >
-              <Text style={[styles.tabText, selectedView === 'list' && styles.activeTabText]}>
+              <Ionicons
+                name="list-outline"
+                size={20}
+                color={selectedView === 'list' ? 'white' : '#4CAF50'}
+              />
+              <Text
+                style={[
+                  styles.toggleText,
+                  selectedView === 'list' && styles.toggleTextActive,
+                ]}
+              >
                 List View
               </Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <ScrollView style={[styles.content, { marginBottom: insets.bottom + 16 }]} showsVerticalScrollIndicator={false}>
-          {selectedView === 'map' && <MapView />}
+        {selectedView === 'map' ? (
+          <ScrollView
+            style={{ flex: 1 }}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
+          >
+            <MapView />
 
-          <View style={styles.eventsSection}>
-            <Text style={styles.sectionHeader}>Upcoming Events</Text>
+            <Text style={styles.upcomingEventsLabel}>Upcoming Events</Text>
+
             {events.map(event => (
               <EventCard
                 key={event.id}
                 event={event}
-                onPress={openEventDetail}
+                onPress={event => {
+                  setSelectedEvent(event);
+                  setModalVisible(true);
+                }}
               />
             ))}
-          </View>
-        </ScrollView>
+          </ScrollView>
+        ) : (
+          <ScrollView
+            style={styles.listContainer}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
+          >
+            {events.map(event => (
+              <EventCard
+                key={event.id}
+                event={event}
+                onPress={event => {
+                  setSelectedEvent(event);
+                  setModalVisible(true);
+                }}
+              />
+            ))}
+          </ScrollView>
+        )}
 
-        <EventDetailModal
-          event={selectedEvent}
-          visible={modalVisible}
-          onClose={closeEventDetail}
-        />
+
+        {selectedEvent && (
+          <EventDetailModal
+            event={selectedEvent}
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+          />
+        )}
       </SafeAreaView>
     </LinearGradient>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
+    padding: 16,
+  },
+  upcomingEventsLabel: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#333',
+    marginHorizontal: 16,
+    marginTop: 24,
+    marginBottom: 12,
   },
   header: {
     paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  headerTop: {
+    paddingVertical: 12,
+    backgroundColor: '#e6f4ea',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
   },
-  headerTitle: {
-    color: 'white',
+  screenTitle: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#2e7d32',
   },
-  headerActions: {
+  viewToggle: {
     flexDirection: 'row',
-    gap: 8,
+    borderRadius: 20,
+    backgroundColor: '#c8e6c9',
   },
-  headerButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    padding: 8,
-    borderRadius: 12,
-  },
-  tabContainer: {
+  toggleButton: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 16,
-    padding: 4,
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: 12,
     alignItems: 'center',
-    borderRadius: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    borderRadius: 20,
   },
-  activeTab: {
-    backgroundColor: 'white',
+  toggleButtonActive: {
+    backgroundColor: '#4caf50',
   },
-  tabText: {
-    color: 'rgba(255, 255, 255, 0.8)',
+  toggleText: {
+    marginLeft: 6,
+    color: '#4caf50',
     fontWeight: '600',
   },
-  activeTabText: {
-    color: '#22c55e',
-  },
-  content: {
-    flex: 1,
-    padding: 16,
+  toggleTextActive: {
+    color: 'white',
   },
   mapContainer: {
-    marginBottom: 16,
-  },
-  mapBackground: {
-    backgroundColor: '#dcfce7',
-    borderRadius: 16,
-    height: 200,
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  mapContent: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
+    backgroundColor: '#e6f4ea',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  mapBackground: {
+    width: '90%',
+    height: '75%',
+    backgroundColor: 'white',
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 5 },
+    shadowRadius: 10,
+    elevation: 5,
+    position: 'relative',
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  mapContent: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   mapTitle: {
-    color: '#15803d',
-    fontWeight: '600',
-    fontSize: 16,
-    marginTop: 8,
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#22c55e',
   },
   mapSubtitle: {
-    color: '#22c55e',
     fontSize: 14,
+    color: '#4caf50',
     marginTop: 4,
   },
   mapMarker: {
-    position: 'absolute',
     width: 24,
     height: 24,
-    backgroundColor: '#22c55e',
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#4caf50',
+    position: 'absolute',
+    borderWidth: 2,
+    borderColor: '#ffffff',
   },
-  markerInner: {
-    width: 12,
-    height: 12,
-    backgroundColor: 'white',
-    borderRadius: 6,
-  },
-  eventsSection: {
-    marginTop: 8,
-  },
-  sectionHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: 16,
+  listContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 8,
   },
   eventCard: {
     backgroundColor: 'white',
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 12,
     marginBottom: 12,
+    padding: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 5,
     elevation: 3,
   },
   eventCardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12,
   },
   eventInfo: {
     flex: 1,
   },
   eventTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: 4,
+    color: '#2e7d32',
   },
   eventLocation: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 2,
+    marginTop: 4,
   },
   eventLocationText: {
-    color: '#6b7280',
-    fontSize: 14,
     marginLeft: 4,
+    color: '#666',
   },
   eventDate: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 2,
   },
   eventDateText: {
-    color: '#6b7280',
-    fontSize: 14,
     marginLeft: 4,
+    color: '#666',
   },
   eventMeta: {
+    justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
   pointsBadge: {
-    backgroundColor: '#22c55e',
-    paddingHorizontal: 12,
+    backgroundColor: '#a5d6a7',
+    paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 20,
-    marginBottom: 8,
+    borderRadius: 12,
+    marginBottom: 6,
   },
   pointsText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '600',
+    color: '#2e7d32',
+    fontWeight: '700',
+    fontSize: 12,
   },
   difficultyBadge: {
     paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 20,
+    paddingVertical: 4,
+    borderRadius: 12,
   },
   difficultyEasy: {
-    backgroundColor: '#dcfce7',
+    backgroundColor: '#c8e6c9',
   },
   difficultyMedium: {
-    backgroundColor: '#fef3c7',
+    backgroundColor: '#ffe082',
   },
   difficultyHard: {
-    backgroundColor: '#fee2e2',
+    backgroundColor: '#ef9a9a',
   },
   difficultyText: {
-    fontSize: 12,
     fontWeight: '600',
+    fontSize: 12,
   },
   difficultyEasyText: {
-    color: '#15803d',
+    color: '#2e7d32',
   },
   difficultyMediumText: {
-    color: '#d97706',
+    color: '#ef6c00',
   },
   difficultyHardText: {
-    color: '#dc2626',
+    color: '#b71c1c',
   },
   eventFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 12,
     alignItems: 'center',
-    marginBottom: 8,
   },
   participants: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   participantsText: {
-    color: '#6b7280',
-    fontSize: 14,
     marginLeft: 4,
+    color: '#666',
+    fontSize: 12,
   },
   progressBarContainer: {
-    height: 8,
-    backgroundColor: '#f3f4f6',
+    height: 6,
+    backgroundColor: '#c8e6c9',
     borderRadius: 4,
+    marginTop: 8,
   },
   progressBar: {
-    height: 8,
-    backgroundColor: '#22c55e',
+    height: 6,
+    backgroundColor: '#4caf50',
     borderRadius: 4,
   },
+
   modalContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#f9fafb',
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    borderBottomColor: '#ddd',
   },
   modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1f2937',
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#2e7d32',
     flex: 1,
   },
   closeButton: {
     padding: 4,
   },
   modalContent: {
-    flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 12,
   },
   eventDetails: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   detailRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
   },
   detailText: {
-    color: '#4b5563',
+    marginLeft: 8,
+    color: '#4caf50',
     fontSize: 16,
-    marginLeft: 12,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: 8,
+    color: '#2e7d32',
+    marginBottom: 6,
   },
   sectionText: {
-    color: '#6b7280',
     fontSize: 16,
-    lineHeight: 24,
+    color: '#555',
+    lineHeight: 22,
   },
   requirementText: {
-    color: '#6b7280',
-    fontSize: 14,
+    fontSize: 16,
+    color: '#555',
+    marginLeft: 12,
     marginBottom: 4,
   },
   joinButton: {
-    backgroundColor: '#22c55e',
-    margin: 16,
-    padding: 16,
-    borderRadius: 16,
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#4caf50',
+    paddingVertical: 12,
+    borderRadius: 12,
+    justifyContent: 'center',
+    marginTop: 12,
+    marginBottom: 24,
   },
   joinButtonText: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
 const styles2 = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#4caf50',
   },
   safeArea: {
     flex: 1,
   },
   header: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
   },
   headerTitle: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: '700',
   },
   closeButton: {
-    padding: 8,
+    padding: 4,
   },
   content: {
     flex: 1,
+    paddingHorizontal: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 16,
   },
   rewardCard: {
     backgroundColor: 'white',
     borderRadius: 24,
+    padding: 28,
     width: '100%',
-    padding: 24,
+    maxWidth: 360,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.15,
     shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
     elevation: 5,
   },
   iconContainer: {
-    marginBottom: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  animation: {
-    width: 200,
-    height: 200,
-    position: 'absolute',
+    marginBottom: 16,
   },
   coinCircle: {
+    backgroundColor: '#a5d6a7',
+    borderRadius: 40,
     width: 80,
     height: 80,
-    borderRadius: 40,
-    backgroundColor: '#dcfce7',
     justifyContent: 'center',
     alignItems: 'center',
   },
   congratsText: {
-    fontSize: 18,
-    color: '#4b5563',
-    marginTop: 8,
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#4caf50',
+    marginBottom: 8,
+    textAlign: 'center',
   },
   eventTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#1f2937',
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 20,
     textAlign: 'center',
-    marginTop: 4,
-    marginBottom: 16,
   },
   rewardSection: {
-    marginVertical: 16,
-    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: 20,
   },
   coinContainer: {
     alignItems: 'center',
   },
   coinAmount: {
-    fontSize: 42,
-    fontWeight: 'bold',
-    color: '#22c55e',
+    fontSize: 36,
+    fontWeight: '700',
+    color: '#4caf50',
   },
   coinLabel: {
-    fontSize: 16,
-    color: '#4b5563',
+    fontSize: 14,
+    color: '#666',
   },
   separator: {
-    height: 1,
-    backgroundColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e1e1e1',
+    marginVertical: 20,
     width: '100%',
-    marginVertical: 16,
   },
   eventDetailsSection: {
     width: '100%',
   },
   detailsHeading: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: 10,
+    fontWeight: '700',
+    color: '#4caf50',
+    marginBottom: 12,
   },
   detailRow: {
     flexDirection: 'row',
@@ -812,51 +920,61 @@ const styles2 = StyleSheet.create({
   },
   detailText: {
     marginLeft: 10,
-    fontSize: 14,
-    color: '#4b5563',
+    fontSize: 16,
+    color: '#555',
+    flexShrink: 1,
   },
   calendarButton: {
+    marginTop: 24,
+    backgroundColor: '#4caf50',
     flexDirection: 'row',
-    backgroundColor: '#22c55e',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 12,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 16,
-  },
-  buttonIcon: {
-    marginRight: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 24,
   },
   calendarButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '600',
+    marginLeft: 12,
+    fontWeight: '700',
+  },
+  buttonIcon: {
+    marginLeft: 4,
   },
   buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 28,
     width: '100%',
-    marginTop: 20,
+    maxWidth: 360,
   },
   viewDetailsButton: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
     paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 24,
+    flex: 1,
+    marginRight: 8,
     alignItems: 'center',
-    marginBottom: 8,
   },
   viewDetailsText: {
-    color: 'white',
+    color: '#4caf50',
+    fontWeight: '700',
     fontSize: 16,
-    fontWeight: '600',
   },
   homeButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#2e7d32',
     paddingVertical: 12,
-    borderRadius: 16,
+    paddingHorizontal: 16,
+    borderRadius: 24,
+    flex: 1,
+    marginLeft: 8,
     alignItems: 'center',
   },
   homeButtonText: {
     color: 'white',
+    fontWeight: '700',
     fontSize: 16,
-    fontWeight: '600',
   },
 });

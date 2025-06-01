@@ -1,23 +1,11 @@
 import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
-import {
-  Alert,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function EcoServicesApp() {
   const fileUri = FileSystem.documentDirectory + 'data.json';
 
-  // State for counts loaded from file
   const [transportCounts, setTransportCounts] = useState({
     car: 0,
     bike: 0,
@@ -25,7 +13,6 @@ export default function EcoServicesApp() {
     walk: 0,
   });
 
-  // Which options are currently selected by user (multi-select)
   const [selectedOptions, setSelectedOptions] = useState({
     car: false,
     bike: false,
@@ -33,13 +20,11 @@ export default function EcoServicesApp() {
     walk: false,
   });
 
-  // Diet and notes text inputs (for future use)
   const [diet, setDiet] = useState('');
   const [notes, setNotes] = useState('');
 
   const [loading, setLoading] = useState(true);
 
-  // Load saved counts from file on mount
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -53,7 +38,7 @@ export default function EcoServicesApp() {
         const data = JSON.parse(content);
         setTransportCounts(data);
       } catch (error) {
-        console.log('Load error:', error);
+        console.error('Load error:', error);
         setTransportCounts({ car: 0, bike: 0, public: 0, walk: 0 });
       } finally {
         setLoading(false);
@@ -62,7 +47,6 @@ export default function EcoServicesApp() {
     loadData();
   }, []);
 
-  // Toggle selection for a transport option (multi-select)
   const toggleOption = (key: keyof typeof selectedOptions) => {
     setSelectedOptions((prev) => ({
       ...prev,
@@ -70,7 +54,6 @@ export default function EcoServicesApp() {
     }));
   };
 
-  // Save: increment count for all selected options, save to file, clear selections
   const handleSave = async () => {
     try {
       const newCounts = { ...transportCounts };
@@ -80,22 +63,18 @@ export default function EcoServicesApp() {
         }
       });
 
-      // Save to file
       await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(newCounts));
       setTransportCounts(newCounts);
 
-      // Clear selections after save
-      setSelectedOptions({
+        setSelectedOptions({
         car: false,
         bike: false,
         public: false,
         walk: false,
       });
 
-      Alert.alert('Data saved', JSON.stringify(newCounts));
     } catch (e) {
-      Alert.alert('Error saving data');
-      console.log('Save error:', e);
+      console.error('Save error:', e);
     }
   };
 

@@ -162,8 +162,9 @@ const QuizScreen = () => {
   const progressPercentage = ((currentQuestionIndex + 1) / quizData.length) * 100;
 
   const fileUri = FileSystem.documentDirectory + 'globux.json'
+  var isLoaded = false
   var [globux, setGlobux] = useState(0);
-
+  isLoaded = true;
   const gainGlobux = async () => {
     try {
       const fileInfo = await FileSystem.getInfoAsync(fileUri);
@@ -181,6 +182,8 @@ const QuizScreen = () => {
   };
 
     useEffect(() => {
+        if (!isLoaded) return;
+
         const save = async () => {
             try {
                 const content = JSON.stringify({ globux });
@@ -191,7 +194,7 @@ const QuizScreen = () => {
         };
 
         save();
-    }, [globux]);
+    }, [globux, isLoaded]);
 
   const handleAnswer = (answer: MultipleChoiceAnswer | MultipleSelectAnswer | TrueFalseAnswer | FillInBlankAnswer | SliderAnswer | CategorizeAnswer | LikertScaleAnswer) => {
     setAnswers({

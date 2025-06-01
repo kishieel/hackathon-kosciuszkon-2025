@@ -173,7 +173,7 @@ export default function EcoServicesApp() {
                 {/* Welcome Section */}
                 <View style={styles.welcomeSection}>
                     <Text style={styles.welcomeText}>EcoShop</Text>
-                    <Text style={styles.globuxCounter}>{globux} GreenCoins</Text>
+                    <Text style={styles.globuxCounter}>{globux} GreenCoin{globux === 1 ? '' : 's'}</Text>
                 </View>
 
                 {/* Services Grid */}
@@ -188,7 +188,7 @@ export default function EcoServicesApp() {
                                         </View>
                                         <View style={styles.productBar}>
                                             <Text style={styles.productName}>{product.title}</Text>
-                                            <Text style={styles.productPrice}>{product.price} GreenCoins</Text>
+                                            <Text style={styles.productPrice}>{product.price} GreenCoin{product.price === 1 ? '' : 's'}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 ))}
@@ -199,7 +199,7 @@ export default function EcoServicesApp() {
                                     <Image source={product.icon} style={styles.productIconWide} resizeMode='cover' />
                                     <View style={styles.productBarWide}>
                                         <Text numberOfLines={1} style={styles.productNameWide}>{product.title}</Text>
-                                        <Text style={styles.productPriceWide}>{product.price} GreenCoins</Text>
+                                        <Text style={styles.productPriceWide}>{product.price} GreenCoin{product.price === 1 ? '' : 's'}</Text>
                                     </View>
                                 </TouchableOpacity>
                             ))}

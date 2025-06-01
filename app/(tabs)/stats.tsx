@@ -1,88 +1,41 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import dataJson from '../data/data.json';
 
 export default function EcoServicesApp() {
+    const [transportData, setTransportData] = useState({
+        car: dataJson.car,
+        bike: dataJson.bike,
+        public: dataJson.public,
+        walk: dataJson.walk,
+    });
+    Alert.alert(JSON.stringify(transportData));
     const stats = [
         {
             id: 1,
-            title: 'Days being green: ',
+            title: 'Times traveled by car: ',
             icon: require('../../assets/images/favicon.png'),
+            data: dataJson.car
         },
         {
             id: 2,
-            title: 'Ice cubes saved: ',
+            title: 'Times traveled by bike: ',
             icon: require('../../assets/images/favicon.png'),
+            data: dataJson.bike
         },
         {
             id: 3,
-            title: 'CO2 lowered: ',
-            icon: require('../../assets/images/react-logo.png'),
+            title: 'Times used public transport: ',
+            icon: require('../../assets/images/favicon.png'),
+            data: dataJson.public
         },
         {
             id: 4,
-            title: 'Fuel saved: ',
+            title: 'Times traveled by foot: ',
             icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 5,
-            title: 'Bottles recycled: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 6,
-            title: 'Trees planted: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 7,
-            title: 'Sun happy happy days: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 8,
-            title: 'Happy fishies: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 9,
-            title: 'Skibidi toilets: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 10,
-            title: 'Sigma males: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 11,
-            title: 'Subways surfed: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 12,
-            title: 'Cameramans slain: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 13,
-            title: 'Items from Ziutek\'s pocket: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 14,
-            title: 'Nights at Freddy\'s: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 15,
-            title: 'Leroy Jenkins\' incidents: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
-        {
-            id: 16,
-            title: 'Flowey flowers happy: ',
-            icon: require('../../assets/images/favicon.png'),
-        },
+            data: dataJson.walk
+        }
     ];
 
     return (
@@ -104,7 +57,7 @@ export default function EcoServicesApp() {
                         {stats.map((stat) => (
                             <View key={stat.id} style={styles.statBox}>
                                 <Text style={styles.statText}>{stat.title}</Text>
-                                <Text style={styles.statText}>0</Text>
+                                <Text style={styles.statText}>{stat.data}</Text>
                                 <Image source={stat.icon} style={styles.backgroundIcon} resizeMode="contain" />
                             </View>
                         ))}

@@ -1,7 +1,15 @@
+import * as FileSystem from 'expo-file-system';
 import React, { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import dataJson from '../data/data.json';
 
 export default function JournalPage() {
+  const [transportData, setTransportData] = useState({
+    car: dataJson.car,
+    bike: dataJson.bike,
+    public: dataJson.public,
+    walk: dataJson.walk,
+  });
   const [transportOptions, setTransportOptions] = useState({
     car: false,
     bike: false,
@@ -13,17 +21,36 @@ export default function JournalPage() {
   const [notes, setNotes] = useState('');
 
   const toggleTransportOption = (option: string) => {
-    setTransportOptions((prev) => ({
-      ...prev,
-      [option]: !prev[option],
-    }));
-  };
+  setTransportOptions((prevOptions) => {
+    const wasSelected = prevOptions[option];
+    const newSelection = !wasSelected;
+
+    if (newSelection) {
+      // Increment count when newly selected
+      setTransportData((prevData) => ({
+        ...prevData,
+        [option]: prevData[option] + 1,
+      }));
+    }
+
+    return {
+      ...prevOptions,
+      [option]: newSelection,
+    };
+  });
+};
 
   const handleSave = () => {
     const selectedTransport = Object.entries(transportOptions)
       .filter(([_, isSelected]) => isSelected)
       .map(([option]) => option)
       .join(', ');
+    
+    const jsonify = JSON.stringify(transportData)
+    FileSystem.writeAsStringAsync('../data/data.json', jsonify)
+    Alert.alert(JSON.stringify(FileSystem.documentDirectory))
+    Alert.alert(jsonify, "1")
+    Alert.alert(JSON.stringify(dataJson), "2")
 
     const summary = `
       Transport: ${selectedTransport || null}
@@ -82,7 +109,6 @@ export default function JournalPage() {
 }
 
 const styles = StyleSheet.create({
-  // Layout
   container: {
     flex: 1,
     backgroundColor: '#4CAF50',

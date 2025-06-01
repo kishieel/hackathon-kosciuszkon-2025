@@ -1,53 +1,11 @@
-import { useFocusEffect } from '@react-navigation/native';
-import * as FileSystem from 'expo-file-system';
+import { useCoins } from '@/app/contexts/useCoins';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Animated, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function EcoServicesApp() {
-    const fileUri = FileSystem.documentDirectory + 'globux.json'
-    var [globux, setGlobux] = useState(0);
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    useFocusEffect(
-        useCallback(() => {
-            const loadValue = async () => {
-                try {
-                    setIsLoaded(false)
-                    const fileInfo = await FileSystem.getInfoAsync(fileUri);
-                    if (fileInfo.exists) {
-                        const content = await FileSystem.readAsStringAsync(fileUri);
-                        const parsed = JSON.parse(content);
-                        if (typeof parsed.globux === 'number') {
-                            setGlobux(parsed.globux);
-                        }
-                    }
-                } catch (error) {
-
-                } finally {
-                    setIsLoaded(true)
-                }
-            };
-
-            loadValue();
-        }, [])
-    );
-
-    useEffect(() => {
-        if (!isLoaded) return;
-
-        const save = async () => {
-            try {
-                const content = JSON.stringify({ globux });
-                await FileSystem.writeAsStringAsync(fileUri, content);
-            } catch (error) {
-                console.error('Error saving value to file:', error);
-            }
-        };
-
-        save();
-    }, [globux, isLoaded]);
+    const { coins, addCoins } = useCoins();
 
     const productsBillboard = [
         {
@@ -143,8 +101,8 @@ export default function EcoServicesApp() {
     const insets = useSafeAreaInsets();
 
     function Transaction(x: number) {
-        if (globux >= x) {
-            setGlobux(globux - x);
+        if (coins >= x) {
+            addCoins({ name: `Transaction of ${x} GreenCoins`, value: -x });
         }
         else {
             Shake()
@@ -172,7 +130,7 @@ export default function EcoServicesApp() {
             >
                 <View style={styles.welcomeSection}>
                     <Text style={styles.welcomeText}>EcoShop</Text>
-                    <Text style={styles.globuxCounter}>{globux} GreenCoin{globux === 1 ? '' : 's'}</Text>
+                    <Text style={styles.globuxCounter}>{coins} GreenCoin{coins === 1 ? '' : 's'}</Text>
                 </View>
 
                 <View style={styles.panel}>

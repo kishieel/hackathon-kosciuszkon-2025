@@ -1,7 +1,7 @@
+import { useCoins } from '@/app/contexts/useCoins';
 import Slider from '@react-native-community/slider';
-import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -158,43 +158,9 @@ const QuizScreen = () => {
   const [score, setScore] = useState<number>(0);
   const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
   const [showResult, setShowResult] = useState<boolean>(false);
+  const { addCoins } = useCoins();
 
   const progressPercentage = ((currentQuestionIndex + 1) / quizData.length) * 100;
-
-  const fileUri = FileSystem.documentDirectory + 'globux.json'
-  var isLoaded = false
-  var [globux, setGlobux] = useState(0);
-  isLoaded = true;
-  const gainGlobux = async () => {
-    try {
-      const fileInfo = await FileSystem.getInfoAsync(fileUri);
-      if (fileInfo.exists) {
-        const content = await FileSystem.readAsStringAsync(fileUri);
-        const parsed = JSON.parse(content);
-        if (typeof parsed.globux === 'number') {
-          setGlobux(parsed.globux + score);
-        }
-      }
-    } catch (error) {
-      return;
-    } finally {
-    }
-  };
-
-    useEffect(() => {
-        if (!isLoaded) return;
-
-        const save = async () => {
-            try {
-                const content = JSON.stringify({ globux });
-                await FileSystem.writeAsStringAsync(fileUri, content);
-            } catch (error) {
-                console.error('Error saving value to file:', error);
-            }
-        };
-
-        save();
-    }, [globux, isLoaded]);
 
   const handleAnswer = (answer: MultipleChoiceAnswer | MultipleSelectAnswer | TrueFalseAnswer | FillInBlankAnswer | SliderAnswer | CategorizeAnswer | LikertScaleAnswer) => {
     setAnswers({
@@ -262,6 +228,10 @@ const QuizScreen = () => {
     });
 
     setScore(score);
+    addCoins({
+      name: 'Quiz Completion',
+      value: score,
+    });
   };
 
   const renderMultipleChoice = (task: MultipleChoiceQuestion) => {
@@ -521,7 +491,6 @@ const QuizScreen = () => {
         onPress={() => {
           setCurrentQuestionIndex(0);
           setAnswers({});
-          gainGlobux();
           setScore(0);
           setQuizCompleted(false);
           setShowResult(false);

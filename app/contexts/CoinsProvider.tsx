@@ -1,18 +1,16 @@
 import { CoinsContext } from "@/app/contexts/CoinsContext";
-import * as SQLite from 'expo-sqlite';
+import * as SQLite from "expo-sqlite";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 
-const db = await SQLite.openDatabaseAsync('eco');
-
-export const CoinsProvider = ({ children }: PropsWithChildren<true>) => {
+export const CoinsProvider = ({ children }: PropsWithChildren<{}>) => {
   const [coins, setCoins] = useState(0);
+  const db = SQLite.useSQLiteContext()
 
   useEffect(() => {
     const fetchCoins = async () => {
       try {
-        await db.execAsync(`create table if not exists coins (id integer primary key autoincrement, name text, value integer, date text)`);
-        const coins = await db.getFirstAsync(`select sum(value) as total from coins`);
-        console.log("Fetched coins:", coins);
+        const coins = await db.getFirstAsync<{ total: number }>(`select sum(value) as total from coins`);
+        setCoins(coins?.total || 0);
       } catch (error) {
         console.error("Error fetching coins:", error);
       }

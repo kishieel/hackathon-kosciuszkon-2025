@@ -10,90 +10,66 @@ export default function EcoServicesApp() {
     const productsBillboard = [
         {
             id: 1,
-            title: 'Small Hot-Dog',
+            title: 'Small Vegan Hot-Dog',
             icon: require('../../assets/images/hotdog.png'),
             price: 1500,
         },
         {
             id: 2,
-            title: 'Ice cubes saved: ',
-            icon: require('../../assets/images/ice.png'),
-            price: 1500,
+            title: 'Vegeterian Smoothie',
+            icon: require('../../assets/images/smoothie.png'),
+            price: 2000,
         },
         {
             id: 3,
-            title: 'CO2 lowered: ',
-            icon: require('../../assets/images/co2.png'),
-            price: 1500,
+            title: 'Plant a Tree',
+            icon: require('../../assets/images/tree.png'),
+            price: 3000,
         },
         {
             id: 4,
-            title: 'Fuel saved: ',
-            icon: require('../../assets/images/fuel.png'),
-            price: 1500,
+            title: 'Gym Discount',
+            icon: require('../../assets/images/gym.png'),
+            price: 2500,
         },
         {
             id: 5,
-            title: 'Bottles recycled: ',
-            icon: require('../../assets/images/bottle.png'),
-            price: 1500,
-        },
-        {
-            id: 6,
-            title: 'Trees planted: ',
-            icon: require('../../assets/images/tree.png'),
-            price: 1500,
-        },
-        {
-            id: 7,
-            title: 'Happy fishies: ',
-            icon: require('../../assets/images/fish.png'),
-            price: 1500,
+            title: 'Fund Carbon Filters',
+            icon: require('../../assets/images/filter.png'),
+            price: 5000,
         }
     ];
 
     const productsList = [
         {
             id: 1,
-            title: 'Small Hot-Dog',
+            title: 'Small Vegan Hot-Dog',
             icon: require('../../assets/images/hotdog.png'),
             price: 1500,
         },
         {
             id: 2,
-            title: 'Ice cubes saved: ',
-            icon: require('../../assets/images/ice.png'),
-            price: 1500,
+            title: 'Vegeterian Smoothie',
+            icon: require('../../assets/images/smoothie.png'),
+            price: 2000,
         },
         {
             id: 3,
-            title: 'CO2 lowered: ',
-            icon: require('../../assets/images/co2.png'),
-            price: 1500,
+            title: 'Plant a Tree',
+            icon: require('../../assets/images/tree.png'),
+            price: 3000,
         },
         {
             id: 4,
-            title: 'Fuel saved: ',
-            icon: require('../../assets/images/fuel.png'),
-            price: 1500,
+            title: 'Gym Discount',
+            icon: require('../../assets/images/gym.png'),
+            price: 2500,
         },
         {
             id: 5,
-            title: 'Bottles recycled: ',
-            icon: require('../../assets/images/bottle.png'),
-            price: 1500,
-        },
-        {
-            id: 6,
-            title: 'Trees planted: ',
-            icon: require('../../assets/images/tree.png'),
-            price: 1500,
-        },
-        {
-            id: 7,
-            title: 'Happy fishies: ',
-            icon: require('../../assets/images/fish.png'),
-            price: 1500,
+            title: 'Fund Carbon Filters',
+            icon: require('../../assets/images/filter.png'),
+            price: 5000,
         }
     ];
 

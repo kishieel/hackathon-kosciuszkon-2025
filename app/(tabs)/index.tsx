@@ -8,45 +8,6 @@ import React from 'react';
 export default function EcoServicesApp() { 
   const router = useRouter()
 
-  const services = [
-    {
-      id: 1,
-      title: 'Educational',
-      icon: 'delete-outline',
-      backgroundColor: '#fff',
-    },
-    {
-      id: 2,
-      title: 'Quiz',
-      icon: 'refresh',
-      backgroundColor: '#fff',
-    },
-    {
-      id: 3,
-      title: 'Journal',
-      icon: 'star-outline',
-      backgroundColor: '#fff',
-    },
-    {
-      id: 4,
-      title: 'Statistics',
-      icon: 'calendar-today',
-      backgroundColor: '#fff',
-    },
-    {
-      id: 5,
-      title: 'Events',
-      icon: 'calendar-today',
-      backgroundColor: '#fff',
-    },
-    {
-      id: 6,
-      title: 'Cooperation',
-      icon: 'calendar-today',
-      backgroundColor: '#fff',
-    },
-  ];
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#4CAF50" />
@@ -64,11 +25,11 @@ export default function EcoServicesApp() {
 
           <View style={styles.menuFocusButtonsContainer}>
             <View style={styles.menuFocusButtonsGrid}>
-              <TouchableOpacity key={20} style={styles.menuBigSquareCard}>
+              <TouchableOpacity key={20} style={styles.menuBigSquareCard} onPress={() => router.navigate('/(tabs)/quiz')}>
                 <Image source={require('../../assets/images/react-logo.png')} style={styles.image} resizeMode="contain"/>
                 <Text> Daily Quiz </Text>
               </TouchableOpacity>
-              <TouchableOpacity key={21} style={styles.menuBigSquareCard}>
+              <TouchableOpacity key={21} style={styles.menuBigSquareCard} onPress={() => router.navigate('/(tabs)/shop')}>
                 <Image source={require('../../assets/images/react-logo.png')} style={styles.image} resizeMode="contain"/>
                 <Text> Shop </Text>
               </TouchableOpacity>

@@ -9,16 +9,22 @@ export default function EducationalMaterialsSection() {
           switch (path) {
             case 1:
               router.navigate('/pages/educational/nuclear')
+              break;
             case 2:
               router.navigate('/pages/educational/dissipation')
+              break;
             case 3:
               router.navigate('/pages/educational/transportation')
+              break;
             case 4:
               router.navigate('/pages/educational/longterm-storage')
+              break;
             case 5:
               router.navigate('/pages/educational/innovative-storage')
+              break;
             case 6:
               router.navigate('/pages/educational/green-energy')
+              break;
           }
         }
     const materials = [

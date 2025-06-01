@@ -1,6 +1,7 @@
+import { useFocusEffect } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function EcoServicesApp() {
@@ -15,27 +16,30 @@ export default function EcoServicesApp() {
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const fileInfo = await FileSystem.getInfoAsync(fileUri);
-        if (!fileInfo.exists) {
+  useFocusEffect(
+    useCallback(() => {
+      const loadData = async () => {
+        try {
+          const fileInfo = await FileSystem.getInfoAsync(fileUri);
+          if (!fileInfo.exists) {
+            setTransportCounts({ car: 0, bike: 0, public: 0, walk: 0 });
+            return;
+          }
+          const content = await FileSystem.readAsStringAsync(fileUri);
+          if (!content) throw new Error('Empty file');
+          const data = JSON.parse(content);
+          setTransportCounts(data);
+        } catch (error) {
+          console.error('Load error:', error);
           setTransportCounts({ car: 0, bike: 0, public: 0, walk: 0 });
-          return;
+        } finally {
+          setLoading(false);
         }
-        const content = await FileSystem.readAsStringAsync(fileUri);
-        if (!content) throw new Error('Empty file');
-        const data = JSON.parse(content);
-        setTransportCounts(data);
-      } catch (error) {
-        console.log('Load error:', error);
-        setTransportCounts({ car: 0, bike: 0, public: 0, walk: 0 });
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
+      };
+      loadData();
+    }, []
+    )
+  );
 
   const stats = [
     {
@@ -78,7 +82,7 @@ export default function EcoServicesApp() {
           <View style={styles.panel}>
             {loading ? (
               <Text style={styles.statText}>Loading...</Text>
-              ) : (
+            ) : (
               stats.map((stat) => (
                 <View key={stat.id} style={styles.statBox}>
                   <Text style={styles.statText}>{stat.title}</Text>

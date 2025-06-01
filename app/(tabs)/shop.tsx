@@ -170,13 +170,11 @@ export default function EcoServicesApp() {
                 colors={['#81C784', '#4CAF50', '#2E7D32']}
                 style={styles.gradient}
             >
-                {/* Welcome Section */}
                 <View style={styles.welcomeSection}>
                     <Text style={styles.welcomeText}>EcoShop</Text>
-                    <Text style={styles.globuxCounter}>{globux} GreenCoins</Text>
+                    <Text style={styles.globuxCounter}>{globux} GreenCoin{globux === 1 ? '' : 's'}</Text>
                 </View>
 
-                {/* Services Grid */}
                 <View style={styles.panel}>
                     <Animated.View style={{ transform: [{ translateX: shakeAnim }] }}>
                         <ScrollView style={{ marginBottom: insets.bottom + 54 }} showsVerticalScrollIndicator={false}>
@@ -188,7 +186,7 @@ export default function EcoServicesApp() {
                                         </View>
                                         <View style={styles.productBar}>
                                             <Text style={styles.productName}>{product.title}</Text>
-                                            <Text style={styles.productPrice}>{product.price} GreenCoins</Text>
+                                            <Text style={styles.productPrice}>{product.price} GreenCoin{product.price === 1 ? '' : 's'}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 ))}
@@ -199,7 +197,7 @@ export default function EcoServicesApp() {
                                     <Image source={product.icon} style={styles.productIconWide} resizeMode='cover' />
                                     <View style={styles.productBarWide}>
                                         <Text numberOfLines={1} style={styles.productNameWide}>{product.title}</Text>
-                                        <Text style={styles.productPriceWide}>{product.price} GreenCoins</Text>
+                                        <Text style={styles.productPriceWide}>{product.price} GreenCoin{product.price === 1 ? '' : 's'}</Text>
                                     </View>
                                 </TouchableOpacity>
                             ))}

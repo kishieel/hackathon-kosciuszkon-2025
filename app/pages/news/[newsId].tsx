@@ -7,7 +7,7 @@ import { news } from '../../../data/news.ts';
 
 export default function NewsSection() {
     const headerHeight = useHeaderHeight();
-    console.log(useLocalSearchParams())
+    console.error(useLocalSearchParams())
     const { newsId } = useLocalSearchParams<{ newsId: string }>();
     var newsInstance = news.find(n => n.id == parseInt(newsId));
 
@@ -28,7 +28,7 @@ export default function NewsSection() {
         )
     }
     else {
-        console.log("News page not found")
+        console.error("News page not found")
     }
 
 }

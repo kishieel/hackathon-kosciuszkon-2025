@@ -45,7 +45,7 @@ export default function EcoServicesApp() {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.welcomeSection}>
             <Text style={styles.welcomeText}>Welcome</Text>
-            <Text style={styles.mainMenuCoinCounter}>You have: {globux} GreenCoins</Text>
+            <Text style={styles.mainMenuCoinCounter}>You have: {globux} GreenCoin{globux === 1 ? '' : 's'}</Text>
           </View>
 
           <View style={styles.menuFocusButtonsContainer}>

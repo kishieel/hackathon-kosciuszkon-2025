@@ -69,7 +69,7 @@ export default function EcoServicesApp() {
       backgroundColor: '#fff',
     },
   ];
-
+          
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#4CAF50" />
@@ -87,11 +87,11 @@ export default function EcoServicesApp() {
 
           <View style={styles.menuFocusButtonsContainer}>
             <View style={styles.menuFocusButtonsGrid}>
-              <TouchableOpacity key={20} style={styles.menuBigSquareCard}>
+              <TouchableOpacity key={20} style={styles.menuBigSquareCard} onPress={() => router.navigate('/(tabs)/quiz')}>
                 <Image source={require('../../assets/images/react-logo.png')} style={styles.image} resizeMode="contain"/>
                 <Text> Daily Quiz </Text>
               </TouchableOpacity>
-              <TouchableOpacity key={21} style={styles.menuBigSquareCard}>
+              <TouchableOpacity key={21} style={styles.menuBigSquareCard} onPress={() => router.navigate('/(tabs)/shop')}>
                 <Image source={require('../../assets/images/react-logo.png')} style={styles.image} resizeMode="contain"/>
                 <Text> Shop </Text>
               </TouchableOpacity>

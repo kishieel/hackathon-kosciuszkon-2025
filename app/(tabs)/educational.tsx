@@ -1,24 +1,30 @@
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
-
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import React from 'react';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
 export default function EducationalMaterialsSection() { 
     const router = useRouter()
         const redirect = (path:number) => {
           switch (path) {
             case 1:
               router.navigate('/pages/educational/nuclear')
+              break;
             case 2:
               router.navigate('/pages/educational/dissipation')
+              break;
             case 3:
               router.navigate('/pages/educational/transportation')
+              break;
             case 4:
               router.navigate('/pages/educational/longterm-storage')
+              break;
             case 5:
               router.navigate('/pages/educational/innovative-storage')
+              break;
             case 6:
               router.navigate('/pages/educational/green-energy')
+              break;
           }
         }
     const materials = [
@@ -97,7 +103,7 @@ const styles = StyleSheet.create({
   },
   welcomeSection: {
     paddingHorizontal: 20,
-    paddingVertical: 80,
+    paddingVertical: 20,
     alignItems: 'center',
   },
   welcomeText: {

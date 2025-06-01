@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function EcoServicesApp() {
     const stats = [
@@ -87,8 +87,6 @@ export default function EcoServicesApp() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#4CAF50" />
-
             <LinearGradient
                 colors={['#81C784', '#4CAF50', '#2E7D32']}
                 style={styles.gradient}

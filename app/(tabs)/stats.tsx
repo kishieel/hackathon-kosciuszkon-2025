@@ -1,17 +1,7 @@
 import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
-import {
-    Alert,
-    Image,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function EcoServicesApp() {
   const fileUri = FileSystem.documentDirectory + 'data.json';
@@ -25,7 +15,6 @@ export default function EcoServicesApp() {
 
   const [loading, setLoading] = useState(true);
 
-  // Load data from file on mount
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -38,7 +27,6 @@ export default function EcoServicesApp() {
         if (!content) throw new Error('Empty file');
         const data = JSON.parse(content);
         setTransportCounts(data);
-        Alert.alert('Loaded data', JSON.stringify(data));
       } catch (error) {
         console.log('Load error:', error);
         setTransportCounts({ car: 0, bike: 0, public: 0, walk: 0 });
@@ -53,25 +41,25 @@ export default function EcoServicesApp() {
     {
       id: 1,
       title: 'Times traveled by car: ',
-      icon: require('../../assets/images/favicon.png'),
+      icon: require('../../assets/images/car.jpg'),
       data: transportCounts.car,
     },
     {
       id: 2,
       title: 'Times traveled by bike: ',
-      icon: require('../../assets/images/favicon.png'),
+      icon: require('../../assets/images/bike.jpg'),
       data: transportCounts.bike,
     },
     {
       id: 3,
       title: 'Times used public transport: ',
-      icon: require('../../assets/images/favicon.png'),
+      icon: require('../../assets/images/bus.jpg'),
       data: transportCounts.public,
     },
     {
       id: 4,
       title: 'Times traveled by foot: ',
-      icon: require('../../assets/images/favicon.png'),
+      icon: require('../../assets/images/walk.jpg'),
       data: transportCounts.walk,
     },
   ];
@@ -82,19 +70,15 @@ export default function EcoServicesApp() {
 
       <LinearGradient
         colors={['#81C784', '#4CAF50', '#2E7D32']}
-        style={styles.gradient}
-      >
-        {/* Welcome Section */}
+        style={styles.gradient}>
         <View style={styles.welcomeSection}>
           <Text style={styles.welcomeText}>Statistics</Text>
         </View>
-
-        {/* Services Grid */}
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.panel}>
             {loading ? (
               <Text style={styles.statText}>Loading...</Text>
-            ) : (
+              ) : (
               stats.map((stat) => (
                 <View key={stat.id} style={styles.statBox}>
                   <Text style={styles.statText}>{stat.title}</Text>
@@ -109,8 +93,6 @@ export default function EcoServicesApp() {
             )}
           </View>
         </ScrollView>
-
-        {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
           <TouchableOpacity style={styles.navItem} />
           <TouchableOpacity style={styles.navItem} />
@@ -180,13 +162,13 @@ const styles = StyleSheet.create({
     top: '50%',
     width: 40,
     height: 40,
-    opacity: 0.1,
+    opacity: 1,
     transform: [{ translateY: -20 }],
     zIndex: -1,
   },
   bottomNav: {
     position: 'absolute',
-    bottom: 0,
+    bottom: -90,
     left: 0,
     right: 0,
     flexDirection: 'row',

@@ -99,7 +99,6 @@ export default function EcoServicesApp() {
     }
   };
 
-  // Transport options for UI
   const transportOptions = [
     { key: 'car', label: 'Car' },
     { key: 'bike', label: 'Bike' },
@@ -113,53 +112,40 @@ export default function EcoServicesApp() {
 
       <LinearGradient
         colors={['#81C784', '#4CAF50', '#2E7D32']}
-        style={styles.gradient}
-      >
+        style={styles.gradient}>
         <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
           <View style={styles.contentContainer}>
             <Text style={styles.heading}>Journal</Text>
-
-            {/* Transport choice multi-select checkboxes */}
             <Text style={styles.label}>Transportation choice:</Text>
             <View style={styles.checkboxGroup}>
               {transportOptions.map(({ key, label }) => (
                 <Pressable
                   key={key}
                   style={styles.checkboxRow}
-                  onPress={() => toggleOption(key as keyof typeof selectedOptions)}
-                >
+                  onPress={() => toggleOption(key as keyof typeof selectedOptions)}>
                   <View
                     style={[
                       styles.checkbox,
                       selectedOptions[key as keyof typeof selectedOptions] && styles.checkedCheckbox,
-                    ]}
-                  />
+                    ]}/>
                   <Text style={styles.checkboxLabel}>{label}</Text>
                 </Pressable>
               ))}
             </View>
-
-            {/* Diet input */}
             <Text style={styles.label}>Food choices:</Text>
             <TextInput
               style={styles.textInput}
               placeholder="Describe your diet:"
               value={diet}
               onChangeText={setDiet}
-              multiline
-            />
-
-            {/* Notes input */}
+              multiline/>
             <Text style={styles.label}>Notes</Text>
             <TextInput
               style={styles.textInput}
               placeholder="Write additional thought here"
               value={notes}
               onChangeText={setNotes}
-              multiline
-            />
-
-            {/* Save button */}
+              multiline/>
             <TouchableOpacity style={styles.button} onPress={handleSave}>
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>

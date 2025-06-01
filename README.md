@@ -1,50 +1,77 @@
-# Welcome to your Expo app 👋
+# 🌿 ? – Environmental Awareness & Action App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**?** is a mobile app built with React Native + Expo to promote environmental awareness and encourage sustainable habits through learning, journaling, and real-world engagement. Designed for students and eco-conscious users, the app gamifies good behavior with points and rewards.
 
-## Get started
+---
 
-1. Install dependencies
+## 🌱 Core Features
 
-   ```bash
-   npm install
-   ```
+### 📖 Educational Section
+- Browse short lessons on sustainability, climate change, recycling, and more
+- Interactive content with quizzes to reinforce learning
+- Earn eco-points for completing lessons
 
-2. Start the app
+### 📝 Journal & Habit Tracker
+- Log daily transportation choices (car, bike, walk, public)
+- Record diet and personal eco-reflections
+- Track eco-points earned through habits
 
-   ```bash
-   npx expo start
-   ```
+### 🛍️ Eco-Points Shop
+- Spend earned points in a virtual store
+- Redeem rewards like digital badges, tips, or partner discounts
+- Simulates eco-economy to reinforce sustainable behavior
 
-In the output, you'll find options to open the app in a
+### 📊 Stats & Insights
+- View progress with weekly and monthly statistics
+- Visual breakdown of transportation impact, diet changes, and journal activity
+- See how your habits evolve over time
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### 📆 External Events Feed
+- Discover local or global eco-events, challenges, and volunteering opportunities
+- Events can be linked to extra point bonuses
+- Curated list from internal or external sources (manual or via future API integration)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 📲 Getting Started
 
-When you're ready, run:
+### Prerequisites
+- [Node.js](https://nodejs.org/)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+- [Expo Go](https://expo.dev/client) installed on your phone
+
+### Setup Instructions
 
 ```bash
-npm run reset-project
+git clone https://github.com/your-username/ecolog-app.git
+cd ecolog-app
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### App Structure
 
-## Learn more
+```
+/ecolog-app
+├── /app
+│   ├── (tabs)
+│       ├── _layout.tsx                 # navigation bar layout
+│       ├── educational.tsx             # homepage for educational content
+│       ├── events.tsx                  # event hub
+│       ├── journal.tsx                 # your personal confession space
+│       ├── quiz.tsx                    # test your knowledge
+│       ├── shop.tsx                    # exchange green points for rewards
+│       └── stats.tsx                   # keep track of your activities
+│   ├── data
+│       └── data.json                   # data used in stats page
+│   ├── pages
+│       ├── /educational                # educational materials
+│       └── /news                       # news materials
+│   └── styles                          # defaults for screen layouts
+├── /components                         # default UI elements
+├── /constants                          # color definitions
+├── /data
+│   └── data.ts                         # news data used in the news section
+└── /hooks                              # default hooks
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```

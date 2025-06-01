@@ -1,5 +1,4 @@
 import { useCoins } from '@/app/contexts/useCoins';
-import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React from 'react';
@@ -9,8 +8,6 @@ import { news } from '../../data/news.ts';
 export default function EcoServicesApp() {
   const router = useRouter()
   const { coins } = useCoins();
-
-  const fileUri = FileSystem.documentDirectory + 'globux.json'
 
   return (
     <SafeAreaView style={styles.container}>

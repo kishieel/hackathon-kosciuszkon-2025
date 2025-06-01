@@ -130,7 +130,7 @@ export default function EcoServicesApp() {
             >
                 <View style={styles.welcomeSection}>
                     <Text style={styles.welcomeText}>EcoShop</Text>
-                    <Text style={styles.globuxCounter}>{coins} GreenCoin{coins === 1 ? '' : 's'}</Text>
+                    <Text style={styles.coinsCounter}>{coins} GreenCoin{coins === 1 ? '' : 's'}</Text>
                 </View>
 
                 <View style={styles.panel}>
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         textAlignVertical: 'center',
     },
-    globuxCounter: {
+    coinsCounter: {
         flex: 1,
         fontSize: 16,
         fontWeight: 'bold',

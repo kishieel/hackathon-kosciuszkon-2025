@@ -1,6 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { useState } from 'react';
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { Animated, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function EcoServicesApp() {
@@ -211,7 +211,22 @@ export default function EcoServicesApp() {
         if(globux >= x)
         setGlobux(globux - x);
         else
-        Vibration.vibrate([0, 100]);
+        {
+            Shake()
+            Vibration.vibrate([0, 100]);
+        }
+    };
+
+    const shakeAnim = useRef(new Animated.Value(0)).current;
+
+    const Shake = () => {
+        Animated.sequence([
+        Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true }),
+        ]).start();
     };
 
     return (
@@ -228,32 +243,33 @@ export default function EcoServicesApp() {
 
                 {/* Services Grid */}
                 <View style={styles.panel}>
-                    <ScrollView style={{marginBottom: insets.bottom + 54 }} showsVerticalScrollIndicator={false}>
-                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                            {productsBillboard.map((product) => (
-                                <TouchableOpacity onPress={ () => Transaction(product.price) } key={product.id} style={styles.productTile}>
-                                    <View style={styles.productTop}>{product.title}
-                                        <Image source={product.icon} style={styles.productIcon} resizeMode='contain' />
-                                    </View>
-                                    <View style={styles.productBar}>
-                                        <Text style={styles.productName}>{product.title}</Text>
-                                        <Text style={styles.productPrice}>{product.price} GLOBUX</Text>
+                    <Animated.View style={{ transform: [{ translateX: shakeAnim }] }}>
+                        <ScrollView style={{marginBottom: insets.bottom + 54 }} showsVerticalScrollIndicator={false}>
+                            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                                {productsBillboard.map((product) => (
+                                    <TouchableOpacity onPress={ () => Transaction(product.price) } key={product.id} style={styles.productTile}>
+                                        <View style={styles.productTop}>
+                                            <Image source={product.icon} style={styles.productIcon} resizeMode='contain' />
+                                        </View>
+                                        <View style={styles.productBar}>
+                                            <Text style={styles.productName}>{product.title}</Text>
+                                            <Text style={styles.productPrice}>{product.price} GLOBUX</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
+
+                            {productsList.map((product) => (
+                                <TouchableOpacity onPress={ () => Transaction(product.price) } key={product.id} style={styles.productTileWide}>
+                                    <Image source={product.icon} style={styles.productIconWide} resizeMode='cover' />
+                                    <View style={styles.productBarWide}>
+                                        <Text numberOfLines={1} style={styles.productNameWide}>{product.title}</Text>
+                                        <Text style={styles.productPriceWide}>{product.price} GLOBUX</Text>
                                     </View>
                                 </TouchableOpacity>
                             ))}
                         </ScrollView>
-
-                        {productsList.map((product) => (
-                            <TouchableOpacity onPress={ () => Transaction(product.price) } key={product.id} style={styles.productTileWide}>
-                                <Image source={product.icon} style={styles.productIconWide} resizeMode='cover' />
-                                <View style={styles.productBarWide}>
-                                    <Text numberOfLines={1} style={styles.productNameWide}>{product.title}</Text>
-                                    <Text style={styles.productPriceWide}>{product.price} GLOBUX</Text>
-                                </View>
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-
+                    </Animated.View>
                 </View>
 
                 {/* Bottom Navigation */}

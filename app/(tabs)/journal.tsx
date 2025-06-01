@@ -1,194 +1,160 @@
 import * as FileSystem from 'expo-file-system';
-import React, { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import dataJson from '../data/data.json';
+import React, { useEffect, useState } from 'react';
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 export default function JournalPage() {
-  const [transportData, setTransportData] = useState({
-    car: dataJson.car,
-    bike: dataJson.bike,
-    public: dataJson.public,
-    walk: dataJson.walk,
-  });
-  const [transportOptions, setTransportOptions] = useState({
-    car: false,
-    bike: false,
-    public: false,
-    walk: false,
+  const fileUri = FileSystem.documentDirectory + 'data.json';
+
+  const [transportCounts, setTransportCounts] = useState({
+    car: 0,
+    bike: 0,
+    public: 0,
+    walk: 0,
   });
 
-  const [diet, setDiet] = useState('');
-  const [notes, setNotes] = useState('');
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-  const toggleTransportOption = (option: string) => {
-  setTransportOptions((prevOptions) => {
-    const wasSelected = prevOptions[option];
-    const newSelection = !wasSelected;
-
-    if (newSelection) {
-      // Increment count when newly selected
-      setTransportData((prevData) => ({
-        ...prevData,
-        [option]: prevData[option] + 1,
-      }));
-    }
-
-    return {
-      ...prevOptions,
-      [option]: newSelection,
+  // Load data from file on mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const fileInfo = await FileSystem.getInfoAsync(fileUri);
+        if (!fileInfo.exists) {
+          setTransportCounts({ car: 0, bike: 0, public: 0, walk: 0 });
+          return;
+        }
+        const content = await FileSystem.readAsStringAsync(fileUri);
+        if (!content) throw new Error('Empty file');
+        const data = JSON.parse(content);
+        setTransportCounts(data);
+        Alert.alert(JSON.stringify(data))
+      } catch (error) {
+        console.log('Load error:', error);
+        setTransportCounts({ car: 0, bike: 0, public: 0, walk: 0 });
+      }
     };
-  });
-};
+    loadData();
+  }, []);
 
-  const handleSave = () => {
-    const selectedTransport = Object.entries(transportOptions)
-      .filter(([_, isSelected]) => isSelected)
-      .map(([option]) => option)
-      .join(', ');
-    
-    const jsonify = JSON.stringify(transportData)
-    FileSystem.writeAsStringAsync('../data/data.json', jsonify)
-    Alert.alert(JSON.stringify(FileSystem.documentDirectory))
-    Alert.alert(jsonify, "1")
-    Alert.alert(JSON.stringify(dataJson), "2")
-
-    const summary = `
-      Transport: ${selectedTransport || null}
-      Diet: ${diet || null}
-      Notes: ${notes || null}
-    `;
-
-    Alert.alert("Entry saved.", summary.trim());
+  // Save updated counts to file
+  const handleSave = async () => {
+    if (!selectedOption) {
+      Alert.alert('Please select a transportation option before saving.');
+      return;
+    }
+    try {
+      // Increment selected option count
+      const newCounts = {
+        ...transportCounts,
+        [selectedOption]: transportCounts[selectedOption] + 1,
+      };
+      setTransportCounts(newCounts);
+      await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(newCounts));
+      Alert.alert(
+        'Saved',
+        `${capitalize(selectedOption)} count incremented to ${newCounts[selectedOption]}`
+      );
+      setSelectedOption(null); // reset selection after save
+    } catch (error) {
+      console.log('Save error:', error);
+      Alert.alert('Error saving data');
+    }
   };
+
+  // Helper for display text capitalization
+  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.container}>
-        <Text style={styles.heading}>Journal</Text>
-        <View style={styles.checkboxGroup}>
-          <Text style={styles.label}>Transportation choice:</Text>
-          {Object.entries(transportOptions).map(([key, value]) => (
-            <Pressable
-              key={key}
-              style={styles.checkboxRow}
-              onPress={() => toggleTransportOption(key)}>
-              <View style={[styles.checkbox, value && styles.checkedCheckbox]} />
-              <Text style={styles.checkboxLabel}>
-                {{
-                  car: 'Car',
-                  bike: 'Bike',
-                  public: 'Public Transport',
-                  walk: 'Walk',
-                }[key]}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-        <Text style={styles.label}>Food choices:</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Describe your diet:"
-          value={diet}
-          onChangeText={setDiet}
-          multiline
-        />
-        <Text style={styles.label}>Notes</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Write additional thought here"
-          value={notes}
-          onChangeText={setNotes}
-          multiline
-        />
-        <TouchableOpacity style={styles.button} onPress={handleSave}>
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
+      <Text style={styles.heading}>Journal</Text>
+      <Text style={styles.label}>Select your transportation choice:</Text>
+      <View style={styles.optionsContainer}>
+        {['car', 'bike', 'public', 'walk'].map((option) => (
+          <Pressable
+            key={option}
+            style={[
+              styles.optionButton,
+              selectedOption === option && styles.optionButtonSelected,
+            ]}
+            onPress={() => setSelectedOption(option)}
+          >
+            <Text
+              style={[
+                styles.optionText,
+                selectedOption === option && styles.optionTextSelected,
+              ]}
+            >
+              {capitalize(option)} ({transportCounts[option]})
+            </Text>
+          </Pressable>
+        ))}
       </View>
+      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+        <Text style={styles.saveButtonText}>Save</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    padding: 24,
     backgroundColor: '#4CAF50',
-    paddingHorizontal: 24,
-    paddingVertical: 20,
-    marginBottom: 30,
-  },
-  gradient: {
-    flex: 1,
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   heading: {
-    fontSize: 24,
+    fontSize: 28,
+    color: '#fff',
     fontWeight: '700',
+    marginBottom: 24,
     textAlign: 'center',
-    color: '#FFFFFF',
-    marginBottom: 20,
   },
   label: {
-    fontSize: 16,
-    fontWeight: '500',
-    textAlign: 'left',
+    fontSize: 18,
     color: '#E8F5E9',
-    marginBottom: 8,
-  },
-  checkboxLabel: {
-    fontSize: 16,
-    color: '#F1F8E9',
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
-    color: '#4CAF50',
-  },
-  textInput: {
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    padding: 14,
-    fontSize: 15,
-    textAlignVertical: 'top',
-    minHeight: 100,
-    borderWidth: 1,
-    borderColor: '#A5D6A7',
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 2,
   },
-  checkboxGroup: {
-    marginTop: 12,
-  },
-  checkboxRow: {
+  optionsContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
+    justifyContent: 'space-around',
+    marginBottom: 24,
   },
-  checkbox: {
-    width: 22,
-    height: 22,
-    borderWidth: 2,
-    borderColor: '#C8E6C9',
-    marginRight: 10,
-    borderRadius: 6,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
-    alignItems: 'center',
+  optionButton: {
+    backgroundColor: '#A5D6A7',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 10,
   },
-  checkedCheckbox: {
+  optionButtonSelected: {
     backgroundColor: '#2E7D32',
   },
-  button: {
-    backgroundColor: '#ffffff',
+  optionText: {
+    color: '#1B5E20',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  optionTextSelected: {
+    color: '#E8F5E9',
+  },
+  saveButton: {
+    backgroundColor: '#fff',
     borderRadius: 12,
     paddingVertical: 16,
-    paddingHorizontal: 24,
-    marginTop: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
-  }
+    paddingHorizontal: 32,
+    alignSelf: 'center',
+  },
+  saveButtonText: {
+    color: '#4CAF50',
+    fontWeight: '700',
+    fontSize: 18,
+  },
 });

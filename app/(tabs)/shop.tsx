@@ -170,13 +170,11 @@ export default function EcoServicesApp() {
                 colors={['#81C784', '#4CAF50', '#2E7D32']}
                 style={styles.gradient}
             >
-                {/* Welcome Section */}
                 <View style={styles.welcomeSection}>
                     <Text style={styles.welcomeText}>EcoShop</Text>
                     <Text style={styles.globuxCounter}>{globux} GreenCoin{globux === 1 ? '' : 's'}</Text>
                 </View>
 
-                {/* Services Grid */}
                 <View style={styles.panel}>
                     <Animated.View style={{ transform: [{ translateX: shakeAnim }] }}>
                         <ScrollView style={{ marginBottom: insets.bottom + 54 }} showsVerticalScrollIndicator={false}>

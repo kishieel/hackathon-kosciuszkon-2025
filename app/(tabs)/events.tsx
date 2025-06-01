@@ -49,12 +49,10 @@ export default function EcoEventsScreen() {
     load();
   }, []);
 
-  // Now just update the state when gaining globux; no file read here!
   const gainGlobux = (value : number) => {
     setGlobux(prev => prev + value);
   };
 
-  // Save whenever globux changes, but only after initial load
   useEffect(() => {
     if (!isLoaded) return;
 
@@ -161,7 +159,6 @@ export default function EcoEventsScreen() {
     setEvents(prevEvents => prevEvents.filter(e => e.id !== eventId));
   }
 
-  // Event Card Component
   const EventCard = ({ event, onPress }: { event: any; onPress: (event: any) => void }) => (
     <TouchableOpacity
       style={styles.eventCard}
@@ -233,7 +230,6 @@ export default function EcoEventsScreen() {
     </TouchableOpacity>
   );
 
-  // Map View placeholder
   const MapView = () => (
     <View style={styles.mapContainer}>
       <View style={styles.mapBackground}>
@@ -250,7 +246,6 @@ export default function EcoEventsScreen() {
     </View>
   );
 
-  // Event Detail Modal
   const EventDetailModal = ({
     event,
     visible,
@@ -322,7 +317,6 @@ export default function EcoEventsScreen() {
     </Modal>
   );
 
-  // Reward Screen
   const EventsReward = ({ event }: { event: any }) => {
     const handleReturnHome = () => {
       setRewardVisible(false);
@@ -428,7 +422,6 @@ export default function EcoEventsScreen() {
     setRewardVisible(true);
   };
 
-  // Main return logic
   if (rewardVisible && selectedEvent) {
     return <EventsReward event={selectedEvent} />;
   }
@@ -526,7 +519,6 @@ export default function EcoEventsScreen() {
         )}
 
 
-        {/* Event Details Modal */}
         {selectedEvent && (
           <EventDetailModal
             event={selectedEvent}
@@ -823,7 +815,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// Styles for the reward screen
 const styles2 = StyleSheet.create({
   container: {
     flex: 1,

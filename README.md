@@ -1,6 +1,6 @@
-# 🌿 ? – Environmental Awareness & Action App
+# 🌿 Leaflit – Environmental Awareness & Action App
 
-**?** is a mobile app built with React Native + Expo to promote environmental awareness and encourage sustainable habits through learning, journaling, and real-world engagement. Designed for students and eco-conscious users, the app gamifies good behavior with points and rewards.
+**Leaflit** is a mobile app built with React Native + Expo to promote environmental awareness and encourage sustainable habits through learning, journaling, and real-world engagement. Designed for students and eco-conscious users, the app gamifies good behavior with points and rewards.
 
 ---
 

@@ -1,9 +1,8 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Image, Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -29,35 +28,49 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Image source={require('../../assets/icons/home.png')} style={{height: '100%', width: '100%', tintColor: color}} resizeMode="contain"/>,
         }}
       />
       <Tabs.Screen
         name="quiz"
         options={{
           title: 'Quiz',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="questionmark.circle.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Image source={require('../../assets/icons/quiz.png')} style={{height: '100%', width: '100%', tintColor: color}} resizeMode="contain"/>,
         }}
       />
       <Tabs.Screen
         name="events"
         options={{
           title: 'Events',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />,
+          tabBarIcon: ({ color }) => <Image source={require('../../assets/icons/event.png')} style={{height: '100%', width: '100%', tintColor: color}} resizeMode="contain"/>,
         }}
       />
       <Tabs.Screen
         name="stats"
         options={{
           title: 'Stats',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="chart.bar.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Image source={require('../../assets/icons/thropy.png')} style={{height: '100%', width: '100%', tintColor: color}} resizeMode="contain"/>,
         }}
       />
       <Tabs.Screen
         name="educational"
         options={{
           title: 'Education',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="graduationcap.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Image source={require('../../assets/icons/edu.png')} style={{height: '100%', width: '100%', tintColor: color}} resizeMode="contain"/>,
+        }}
+      />
+      <Tabs.Screen
+        name="shop"
+        options={{
+          title: 'Shop',
+          tabBarIcon: ({ color }) => <Image source={require('../../assets/icons/shop.png')} style={{height: '100%', width: '100%', tintColor: color}} resizeMode="contain"/>,
+        }}
+      />
+      <Tabs.Screen
+        name="journal"
+        options={{
+          title: 'Journal',
+          tabBarIcon: ({ color }) => <Image source={require('../../assets/icons/journal.png')} style={{height: '100%', width: '100%', tintColor: color}} resizeMode="contain"/>,
         }}
       />
     </Tabs>

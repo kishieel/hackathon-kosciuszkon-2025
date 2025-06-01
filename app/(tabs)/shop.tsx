@@ -1,9 +1,54 @@
+import { useFocusEffect } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function EcoServicesApp() {
+    const fileUri = FileSystem.documentDirectory + 'globux.json'
+    var [globux, setGlobux] = useState(0);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useFocusEffect(
+        useCallback(() => {
+            const loadValue = async () => {
+                try {
+                    setIsLoaded(false)
+                    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+                    if (fileInfo.exists) {
+                        const content = await FileSystem.readAsStringAsync(fileUri);
+                        const parsed = JSON.parse(content);
+                        if (typeof parsed.globux === 'number') {
+                            setGlobux(parsed.globux);
+                        }
+                    }
+                } catch (error) {
+
+                } finally {
+                    setIsLoaded(true)
+                }
+            };
+
+            loadValue();
+        }, [])
+    );
+
+    useEffect(() => {
+        if (!isLoaded) return;
+
+        const save = async () => {
+            try {
+                const content = JSON.stringify({ globux });
+                await FileSystem.writeAsStringAsync(fileUri, content);
+            } catch (error) {
+                console.error('Error saving value to file:', error);
+            }
+        };
+
+        save();
+    }, [globux, isLoaded]);
+
     const productsBillboard = [
         {
             id: 1,
@@ -94,16 +139,14 @@ export default function EcoServicesApp() {
         }
     ];
 
-    var [globux, setGlobux] = useState(2000);
 
     const insets = useSafeAreaInsets();
 
-    function Transaction(x : number)
-    {
-        if(globux >= x)
-        setGlobux(globux - x);
-        else
-        {
+    function Transaction(x: number) {
+        if (globux >= x) {
+            setGlobux(globux - x);
+        }
+        else {
             Shake()
             Vibration.vibrate([0, 100]);
         }
@@ -113,11 +156,11 @@ export default function EcoServicesApp() {
 
     const Shake = () => {
         Animated.sequence([
-        Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+            Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true }),
         ]).start();
     };
 
@@ -136,10 +179,10 @@ export default function EcoServicesApp() {
                 {/* Services Grid */}
                 <View style={styles.panel}>
                     <Animated.View style={{ transform: [{ translateX: shakeAnim }] }}>
-                        <ScrollView style={{marginBottom: insets.bottom + 54 }} showsVerticalScrollIndicator={false}>
+                        <ScrollView style={{ marginBottom: insets.bottom + 54 }} showsVerticalScrollIndicator={false}>
                             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                                 {productsBillboard.map((product) => (
-                                    <TouchableOpacity onPress={ () => Transaction(product.price) } key={product.id} style={styles.productTile}>
+                                    <TouchableOpacity onPress={() => Transaction(product.price)} key={product.id} style={styles.productTile}>
                                         <View style={styles.productTop}>
                                             <Image source={product.icon} style={styles.productIcon} resizeMode='contain' />
                                         </View>
@@ -152,7 +195,7 @@ export default function EcoServicesApp() {
                             </ScrollView>
 
                             {productsList.map((product) => (
-                                <TouchableOpacity onPress={ () => Transaction(product.price) } key={product.id} style={styles.productTileWide}>
+                                <TouchableOpacity onPress={() => Transaction(product.price)} key={product.id} style={styles.productTileWide}>
                                     <Image source={product.icon} style={styles.productIconWide} resizeMode='cover' />
                                     <View style={styles.productBarWide}>
                                         <Text numberOfLines={1} style={styles.productNameWide}>{product.title}</Text>

@@ -1,17 +1,82 @@
+import { useFocusEffect } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
+import React, { useCallback, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { news } from '../../data/news.ts';
 
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import React from 'react';
-
-export default function EcoServicesApp() { 
+export default function EcoServicesApp() {
   const router = useRouter()
+
+  const fileUri = FileSystem.documentDirectory + 'globux.json'
+  var [globux, setGlobux] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      const loadValue = async () => {
+        try {
+          const fileInfo = await FileSystem.getInfoAsync(fileUri);
+          if (fileInfo.exists) {
+            const content = await FileSystem.readAsStringAsync(fileUri);
+            const parsed = JSON.parse(content);
+            if (typeof parsed.globux === 'number') {
+              setGlobux(parsed.globux);
+            }
+          }
+        } catch (error) {
+
+        } finally {
+        }
+      };
+
+      loadValue();
+    }, [])
+  );
+
+  const services = [
+    {
+      id: 1,
+      title: 'Educational',
+      icon: 'delete-outline',
+      backgroundColor: '#fff',
+    },
+    {
+      id: 2,
+      title: 'Quiz',
+      icon: 'refresh',
+      backgroundColor: '#fff',
+    },
+    {
+      id: 3,
+      title: 'Journal',
+      icon: 'star-outline',
+      backgroundColor: '#fff',
+    },
+    {
+      id: 4,
+      title: 'Statistics',
+      icon: 'calendar-today',
+      backgroundColor: '#fff',
+    },
+    {
+      id: 5,
+      title: 'Events',
+      icon: 'calendar-today',
+      backgroundColor: '#fff',
+    },
+    {
+      id: 6,
+      title: 'Cooperation',
+      icon: 'calendar-today',
+      backgroundColor: '#fff',
+    },
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#4CAF50" />
-      
+
       <LinearGradient
         colors={['#81C784', '#4CAF50', '#2E7D32']}
         style={styles.gradient}
@@ -20,17 +85,17 @@ export default function EcoServicesApp() {
           {/* Welcome Section */}
           <View style={styles.welcomeSection}>
             <Text style={styles.welcomeText}>Welcome</Text>
-            <Text style={styles.mainMenuCoinCounter}>You have: 420 GreenCoins</Text>
+            <Text style={styles.mainMenuCoinCounter}>You have: {globux} GreenCoins</Text>
           </View>
 
           <View style={styles.menuFocusButtonsContainer}>
             <View style={styles.menuFocusButtonsGrid}>
               <TouchableOpacity key={20} style={styles.menuBigSquareCard} onPress={() => router.navigate('/(tabs)/quiz')}>
-                <Image source={require('../../assets/images/react-logo.png')} style={styles.image} resizeMode="contain"/>
+                <Image source={require('../../assets/images/react-logo.png')} style={styles.image} resizeMode="contain" />
                 <Text> Daily Quiz </Text>
               </TouchableOpacity>
               <TouchableOpacity key={21} style={styles.menuBigSquareCard} onPress={() => router.navigate('/(tabs)/shop')}>
-                <Image source={require('../../assets/images/react-logo.png')} style={styles.image} resizeMode="contain"/>
+                <Image source={require('../../assets/images/react-logo.png')} style={styles.image} resizeMode="contain" />
                 <Text> Shop </Text>
               </TouchableOpacity>
             </View>
@@ -41,9 +106,9 @@ export default function EcoServicesApp() {
             <View style={styles.newsGrid}>
               {news.map((n) => (
                 <TouchableOpacity key={n.id} style={styles.newsCard} onPress={() => {
-                    router.push(`/pages/news/${n.id}`)
-                    console.log(`/pages/news/${n.id}`)
-                  } }>
+                  router.push(`/pages/news/${n.id}`)
+                  console.log(`/pages/news/${n.id}`)
+                }}>
                   <Text style={styles.newsTitle}>{n.title}</Text>
                   <Text style={styles.newsThumbtext}>{n.thumbtext}</Text>
                 </TouchableOpacity>
@@ -235,7 +300,7 @@ const styles = StyleSheet.create({
   },
   bottomNav: {
     position: 'absolute',
-    bottom: 0,
+    bottom: -90,
     left: 0,
     right: 0,
     flexDirection: 'row',
